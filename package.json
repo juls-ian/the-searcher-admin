@@ -14,16 +14,24 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "vue": "^3.5.18"
+    "@hugeicons/core-free-icons": "^1.0.17",
+    "@hugeicons/vue": "^1.0.3",
+    "vee-validate": "^4.15.1",
+    "vue": "^3.5.18",
+    "yup": "^1.7.0",
+    "yup-password": "^0.4.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.31.0",
     "@vitejs/plugin-vue": "^6.0.1",
     "@vue/eslint-config-prettier": "^10.2.0",
+    "autoprefixer": "^10.4.21",
     "eslint": "^9.31.0",
     "eslint-plugin-vue": "~10.3.0",
     "globals": "^16.3.0",
+    "postcss": "^8.5.6",
     "prettier": "3.6.2",
+    "sass-embedded": "^1.92.1",
     "vite": "^7.0.6",
     "vite-plugin-vue-devtools": "^8.0.0"
   }
