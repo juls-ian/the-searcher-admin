@@ -4,22 +4,31 @@
 
 ### Note
  Best practice:
-• If  working solo or in a team that also uses yarn/pnpm, you can use npm add.
+• If  working solo or in a team that also uses yarn/pnpm, you can use npm i.
 • If  writing docs, tutorials, or want maximum clarity → stick with npm install (or the shorthand)
 
 For personal speed → npm i -D sass-embedded
 For clarity in projects/docs → npm install -D sass-embedded
 
-### List of dependencies:
+### V1 Dependencies:
 
-1. **Sass-Embedded** 
-```bash
-npm add -D sass-embedded
+#### Vue Router 
+```bash 
+npm i vue-router@4
+```
+#### Pinia 
+```bash 
+npm i pinia
 ```
 ---
-2. **Auto Prefixer**
+#### **Sass-Embedded** 
 ```bash
-npm add -D autoprefixer postcss
+npm i -D sass-embedded
+```
+---
+#### **Auto Prefixer**
+```bash
+npm i -D autoprefixer postcss
 ```
 
 then create a postcss.config.js file: 
@@ -36,24 +45,55 @@ npm run dev # during development
 npm run build # deployment
 ```
 ---
-3. **HugeIcons**
+#### **HugeIcons**
 ```bash
-npm add @hugeicons/vue
-npm install @hugeicons/core-free-icons
+npm i @hugeicons/vue
+npm i @hugeicons/core-free-icons
 
 ```
 ---
-4. **VeeValidate**
+#### **Axios**
 ```bash
-npm add vee-validate --save
+npm i axios
 ```
 ---
-5. **Yup**
+---
+#### **VeeValidate**
 ```bash
-npm add yup 
+npm i vee-validate --save
 ```
 ---
-6. **Yup Password**
+#### **Yup**
 ```bash
-npm add yup-password
+npm i yup 
+```
+---
+#### **Yup Password**
+```bash
+npm i yup-password
+```
+--- 
+#### DOMPurify
+```bash 
+npm i dompurify
+```
+---
+#### VueUse
+```bash 
+npm i @vueuse/core
+```
+---
+#### Tiptap
+```bash 
+npm i @tiptap/vue-3 @tiptap/pm @tiptap/starter-kit
+```
+---
+#### Day.js
+```bash 
+npm i dayjs
+```
+---
+#### TanStack Query Vue 
+```bash 
+npm i @tanstack/vue-query
 ```
