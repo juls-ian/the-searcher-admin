@@ -57,6 +57,10 @@ npm i @hugeicons/core-free-icons
 npm i axios
 ```
 ---
+#### **Web Font Loader**
+```bash
+npm i webfontloader
+```
 ---
 #### **VeeValidate**
 ```bash
