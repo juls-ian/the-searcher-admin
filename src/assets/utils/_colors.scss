@@ -1,0 +1,31 @@
+/*
+Part of _variables.scss
+*/
+
+/* PRIMARY colors */
+$primary-accent: #800000; // accent / brand
+$primary-base: #2f2e41; // main background or base
+$primary-muted: #4b5563; // // buttons, links, interactive, neutral/secondary elements
+
+/* SECONDARY colors */
+$secondary-accent: #64748b;
+
+/* TERTIARY colors */
+$dashboard-red: #e1296a;
+$dashboard-orange: #fc930a;
+$dashboard-yellow: #facc15;
+$dashboard-green: #54ad56;
+$dashboard-teal: #0db4c9;
+$dashboard-pink: #c13584;
+$dashboard-blue: #316ff6;
+
+/*NEUTRAL */
+/* Surfaces */
+$surface-soft: #f8fafb; // cards, backgrounds
+$surface-dark: #181818; // darker UI areas
+
+/* Text */
+$text-light-main: #ffffff; // primary text white
+$text-dark-main: #030712; // primary text dark
+$text-light-sub: #3c3c3ca9; // rgba(60, 60, 60, 0.66)
+$text-dark-sub: #ebebeba3; // rgba(235, 235, 235, 0.64)

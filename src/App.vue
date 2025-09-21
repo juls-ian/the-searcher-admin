@@ -4,7 +4,10 @@
   <header>
     <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
 
-    <div class="wrapper"></div>
+    <div class="wrapper">
+      <h1>Hello</h1>
+      <h2>Hi</h2>
+    </div>
   </header>
 
   <main></main>
@@ -15,9 +18,21 @@ header {
   line-height: 1.5;
 }
 
+h1 {
+  font-family: Poppins;
+}
+
+h2 {
+  font-family: Roboto;
+}
+
 .logo {
   display: block;
   margin: 0 auto 2rem;
+}
+
+main {
+  color: red;
 }
 
 @media (min-width: 1024px) {

@@ -24,11 +24,11 @@ Check the [Dependencies Guide](dependencies.md) for the instructions
 2. In the `vite.config.js` add an alias in the `defineConfig` as needed 
 
 3. Setup the project structure
-  
-4. Separate two folders for the resources 
+
+Separate two folders for the resources:
 - `src/assets/` 
   - `images` -> images used in components (logos, banners, illustrations)
-  - `styles` -> scss files 
+  - scss files -> follow 7-1 architecture 
   - `icons` -> custom SVG icons. 
   - `fonts`  
   - `logos`
@@ -43,4 +43,4 @@ Check the [Dependencies Guide](dependencies.md) for the instructions
   - large or static files not processed by the bundler 
   - fixed urls    
 
-5. Setup the base styles 
+4. Setup the base and global styles 

@@ -1,0 +1,41 @@
+/* color palette from <https://github.com/vuejs/theme> */
+@use '@utils/colors.scss' as *;
+@use '@utils/fonts.scss' as *;
+
+:root {
+  background-color: $primary-base;
+  color: $text-dark-main;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    background-color: $surface-dark;
+    color: $text-light-main;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: normal;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  min-height: 100vh;
+  color: $text-light-main;
+  background: $surface-dark;
+  transition:
+    color 0.5s,
+    background-color 0.5s;
+  line-height: 1.6;
+  font-family: $body-font;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

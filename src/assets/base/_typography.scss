@@ -1,0 +1,46 @@
+@use '@utils/index.scss' as *;
+
+/*
+Typography base styles
+*/
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-bottom: $spacing-4;
+}
+
+h1 {
+  font-size: $font-size-3xl; // 40px - Hero/Page titles
+}
+
+h2 {
+  font-size: $font-size-2xl; // 32px - Section headers
+}
+
+h3 {
+  font-size: $font-size-xl; // 24px - Subsection headers
+}
+
+h4 {
+  font-size: $font-size-lg; // 20px - Component titles
+}
+
+h5 {
+  font-size: $font-size-base; // 16px - Small headers
+}
+
+h6 {
+  font-size: $font-size-sm; // 1px - Inline headers
+}
+
+p {
+  font-size: $font-size-base; // 16px
+}
+
+a {
+  color: $primary-base;
+}

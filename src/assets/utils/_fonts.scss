@@ -1,0 +1,23 @@
+/*
+Part of _variables.scss
+*/
+
+$pop: 'Poppins', sans-serif;
+$rob: 'Roboto', sans-serif;
+$rob-flex: 'Roboto Flex', sans-serif;
+
+$body-font:
+  $pop,
+  $rob,
+  $rob-flex,
+  Inter,
+  -apple-system,
+  BlinkMacSystemFont,
+  'Segoe UI',
+  Oxygen,
+  Ubuntu,
+  Cantarell,
+  'Fira Sans',
+  'Droid Sans',
+  'Helvetica Neue',
+  sans-serif;
