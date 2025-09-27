@@ -44,3 +44,8 @@ Separate two folders for the resources:
   - fixed urls    
 
 4. Setup the base and global styles 
+
+5. Add the global resets 
+
+5. Begin developing the layouts needed
+

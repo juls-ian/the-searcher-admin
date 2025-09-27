@@ -1,0 +1,24 @@
+// Form element resets
+input,
+textarea,
+button,
+select {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+// Container class reset
+.container {
+  max-width: 120rem; // 1200px
+  margin: 0 auto;
+  padding: 0 1rem; // 10px horizontal on mobile
+}
+
+// Utility classes
+.hidden {
+  display: none !important;
+}

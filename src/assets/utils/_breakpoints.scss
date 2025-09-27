@@ -1,3 +1,44 @@
 /*
 Part of _variables.scss
 */
+/* 
+1 rem = 1em = 16px 
+px/16px = em
+*/
+
+// ----- MOBILE -----
+$breakpoint-xs: 20em; // 320px - extra small devices
+$breakpoint-sm: 30em; // 480px - small devices
+$breakpoint-md: 37.5em; // 600px - medium mobile/phablet
+
+// ----- TABLETS -----
+$breakpoint-tablet-sm: 48em; // 768px - small tablets (portrait)
+$breakpoint-tablet-lg: 62em; // 992px - large tablets (landscape)
+
+// ----- DESKTOPS -----
+$breakpoint-desktop-sm: 64em; // 1024px - small desktop
+$breakpoint-desktop-md: 80em; // 1280px - medium desktop
+$breakpoint-desktop-lg: 90em; // 1440px - large desktop
+$breakpoint-desktop-xl: 112.5em; // 1800px - extra large screens
+
+// ----- BREAKPOINTS MAP -----
+$breakpoints: (
+  // 320px
+  xs: $breakpoint-xs,
+  // 480px
+  sm: $breakpoint-sm,
+  // 600px
+  md: $breakpoint-md,
+  // 768px
+  tablet-sm: $breakpoint-tablet-sm,
+  // 992px
+  tablet-lg: $breakpoint-tablet-lg,
+  // 1024px
+  desktop-sm: $breakpoint-desktop-sm,
+  // 1280px
+  desktop-md: $breakpoint-desktop-md,
+  // 1440px
+  desktop-lg: $breakpoint-desktop-lg,
+  // 1800px
+  desktop-xl: $breakpoint-desktop-xl
+);

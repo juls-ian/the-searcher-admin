@@ -1,0 +1,16 @@
+@use 'sass:map';
+@use 'breakpoints' as bp;
+
+// Mobile first
+@mixin respond-to-mf($breakpoint) {
+  @media (min-width: map.get(bp.$breakpoints, $breakpoint)) {
+    @content;
+  }
+}
+
+// Desktop first
+@mixin respond-to-df($breakpoint) {
+  @media (max-width: map.get(bp.$breakpoints, $breakpoint)) {
+    @content;
+  }
+}
