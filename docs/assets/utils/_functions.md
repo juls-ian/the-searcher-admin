@@ -10,3 +10,14 @@
 }
 
 ```
+### 1.1: Only positive values
+```ssss
+@use 'sass:map';
+@use 'spacing' as *;
+
+@function spacing($key) {
+  @return map.get($spacers, $key);
+}
+```
+
+

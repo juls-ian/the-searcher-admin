@@ -4,6 +4,7 @@ Part of _variables.scss
 
 // Sass map
 $spacers: (
+  // --- STANDARD ---
   0: 0,
   // 4px
   1: 0.4rem,
@@ -17,6 +18,8 @@ $spacers: (
   5: 2rem,
   // 24px
   6: 2.4rem,
+  // 28px
+  7: 2.8rem,
   // 32px
   8: 3.2rem,
   // 40px
@@ -31,4 +34,35 @@ $spacers: (
   24: 9.6rem,
   // 128px
   32: 12.8rem,
+
+  // --- Micro adjustments ---
+  // 2px
+  0.5: 0.2rem,
+  // 6px
+  1.5: 0.6rem,
+  // 10px
+  2.5: 1rem,
+  // 14px
+  3.5: 1.4rem,
+  // 18px
+  4.5: 1.8rem,
+
+  // ---Medium range
+  // 36px (between 8 and 10)
+  9: 3.6rem,
+  // 44px (between 10 and 12)
+  11: 4.4rem,
+  // 56px (between 12 and 16)
+  14: 5.6rem,
+  // 72px (between 16 and 20)
+  18: 7.2rem,
+
+  // --- Larger values ---
+  // 160px
+  40: 16rem,
+  // 192px
+  48: 19.2rem,
+  // 256px
+  64: 25.6rem,
+  80: 32rem // 320px
 );

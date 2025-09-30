@@ -1,3 +1,4 @@
+import StaffLogin from '@/views/auth/StaffLogin.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -8,6 +9,12 @@ const router = createRouter({
       name: 'home',
       // component: HomeView,
     },
+    {
+      path: '/login',
+      name: 'login',
+      component: StaffLogin,
+    },
+
     {
       path: '/about',
       name: 'about',
