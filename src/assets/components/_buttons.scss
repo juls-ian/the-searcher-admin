@@ -1,0 +1,27 @@
+@use '@utils/index.scss' as *;
+
+.btn {
+  display: flex;
+  position: relative;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 7rem;
+  cursor: pointer;
+  text-decoration: none;
+  border-radius: 2rem;
+  font-size: $font-size-base;
+  font-family: $pop;
+
+  &--primary {
+    background: $primary-muted;
+  }
+
+  &--login {
+    background: $primary-accent;
+  }
+
+  &--cancel {
+    background-color: $secondary-accent;
+  }
+}

@@ -2,5 +2,17 @@
 @use 'spacing' as *;
 
 @function spacing($key) {
-  @return map.get($spacers, $key);
+  // Absolute value of key: convert keys to positive
+  $abs-key: if($key < 0, $key * -1, $key); // ternary operator
+
+  // Looks up spacing value
+  $value: map.get($spacers, $abs-key);
+
+  // If no value provided
+  @if $value == null {
+    @error "Spacing key '#{$key}' not found in $spacers map";
+  }
+
+  // Determine if pos or neg
+  @return if($key < 0, $value * -1, $value);
 }
