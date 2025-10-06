@@ -1,3 +1,4 @@
+import HomeDashboard from '@/views/admin/HomeDashboard.vue'
 import StaffLogin from '@/views/auth/StaffLogin.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -7,14 +8,18 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      // component: HomeView,
+      component: HomeDashboard,
+      meta: { requiresAuth: true },
     },
     {
       path: '/login',
       name: 'login',
       component: StaffLogin,
+      meta: { requiresGuest: true },
     },
-
+    {
+      path: '/:notFound(.*)*',
+    },
     {
       path: '/about',
       name: 'about',
@@ -24,6 +29,27 @@ const router = createRouter({
       // component: () => import('../views/AboutView.vue'),
     },
   ],
+})
+
+// Global route guard
+router.beforeEach(async (to, from, next) => {
+  const { useAuthStore } = await import('@/stores/auth')
+  const auth = useAuthStore()
+
+  // Initialize auth state & user if token exists
+  if (auth.token && !auth.user) await auth.fetchUser()
+
+  // If route requires authentication and user is not authenticated
+  if (to.meta.requiresAuth && !auth.isAuthenticated) {
+    return next({ name: 'login' })
+  }
+
+  // If route requires guest (login page) and user is already authenticated
+  if (to.meta.requiresGuest && auth.isAuthenticated) {
+    return next({ name: 'home' })
+  }
+
+  next() // allow navigation
 })
 
 export default router

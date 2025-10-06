@@ -6,6 +6,7 @@ import { createPinia } from 'pinia'
 import router from './router'
 import { VueQueryPlugin } from '@tanstack/vue-query'
 import WebFont from 'webfontloader'
+import { useAuthStore } from './stores/auth'
 
 const app = createApp(App)
 const pinia = createPinia()
@@ -21,6 +22,10 @@ WebFont.load({
 })
 
 app.use(router)
-app.use(pinia)
+app.use(pinia) // register Pinia first
+// Restore auth state
+const auth = useAuthStore()
 app.use(VueQueryPlugin)
-app.mount('#app')
+auth.initialize().then(() => {
+  app.mount('#app') // ensures  app starts only when auth is fully initialized
+})

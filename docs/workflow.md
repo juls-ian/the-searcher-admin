@@ -49,3 +49,18 @@ Separate two folders for the resources:
 
 5. Begin developing the layouts needed
 
+### Auth: Login
+
+1. create the login page 
+   
+2. configure in the laravel api:
+   - create **.env.development** and **.env.production** in the laravel api 
+   - configure **.env** of the laravel api
+   - since we're using token auth we need to CSRF-exempt the all API routes in the **app.php** 
+   - configure the **cors.php**'s allowed_origins
+
+3. create src/service/api.js with interceptors and connect it to the api
+
+4. define a store with actions: login & logout && getters: fetchUser
+
+
