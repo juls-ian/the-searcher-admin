@@ -63,4 +63,20 @@ Separate two folders for the resources:
 
 4. define a store with actions: login & logout && getters: fetchUser
 
+5. add route guards and handle login 
+
+### Components 
+
+The app will consist of these components:
+
+#### Vertical Navbar 
+
+This will be the main navigation bar
+  
+
+#### Horizontal Navbar 
+
+
+
+
 
