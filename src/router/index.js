@@ -18,6 +18,21 @@ const router = createRouter({
       meta: { requiresGuest: true },
     },
     {
+      path: '/publisher/publish',
+      name: 'publisher-publish',
+      component: () => import('../views/admin/publisher/PublisherPublish.vue'),
+    },
+    {
+      path: '/publisher/published',
+      name: 'publisher-published',
+      component: () => import('../views/admin/publisher/PublisherPublished.vue'),
+    },
+    {
+      path: '/calendar',
+      name: 'calendar',
+      component: () => import('../views/admin/StaffCalendar.vue'),
+    },
+    {
       path: '/:notFound(.*)*',
     },
     {

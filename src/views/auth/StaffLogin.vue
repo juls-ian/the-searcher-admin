@@ -58,7 +58,7 @@ const handleLogin = async () => {
       // fetch full user data before navigation
       await authStore.fetchUser()
 
-      router.push('home') // redirect to home if login successful
+      router.push({ name: 'home' }) // redirect to home if login successful
     }
   } catch (error) {
     // Error already stored in authStore.error
