@@ -26,10 +26,6 @@ const props = defineProps({
     type: Number,
     default: 30,
   },
-  iconColor: {
-    type: String,
-    default: '$text-light-main',
-  },
 })
 
 const isOpen = ref(false)
@@ -43,7 +39,7 @@ const toggleDropdown = () => {
   <div class="dropdown">
     <div class="dropdown__trigger" @click="toggleDropdown">
       <!-- Left Main icon -->
-      <HugeiconsIcon :icon="icon" :size="iconSize" :color="iconColor" />
+      <HugeiconsIcon class="dropdown__icon" :icon="icon" :size="iconSize" />
       <p class="dropdown__label">{{ label }}</p>
       <!-- Arrow icon  -->
       <HugeiconsIcon
@@ -100,6 +96,10 @@ const toggleDropdown = () => {
     color: $text-light-main;
     flex: 1;
     margin: 0;
+  }
+
+  &__icon {
+    color: $surface-soft;
   }
 
   &__arrow {
