@@ -26,6 +26,11 @@ const props = defineProps({
     type: Number,
     default: 30,
   },
+  // Conditional rendering
+  propsVisible: {
+    type: Boolean,
+    default: true,
+  },
 })
 
 const isOpen = ref(false)
@@ -36,11 +41,11 @@ const toggleDropdown = () => {
 </script>
 
 <template>
-  <div class="dropdown">
+  <div class="dropdown" :class="{ 'dropdown--condensed': !propsVisible }">
     <div class="dropdown__trigger" @click="toggleDropdown">
       <!-- Left Main icon -->
       <HugeiconsIcon class="dropdown__icon" :icon="icon" :size="iconSize" />
-      <p class="dropdown__label">{{ label }}</p>
+      <p class="dropdown__label" v-if="propsVisible">{{ label }}</p>
       <!-- Arrow icon  -->
       <HugeiconsIcon
         class="dropdown__arrow"
@@ -48,6 +53,7 @@ const toggleDropdown = () => {
         :class="{ 'dropdown__arrow--open': isOpen }"
         :size="25"
         color="iconColor"
+        v-if="propsVisible"
       />
     </div>
 
@@ -77,6 +83,35 @@ const toggleDropdown = () => {
 
 .dropdown {
   width: 100%;
+
+  // To center the icons on navbar--condensed
+  &--condensed {
+    .dropdown__trigger {
+      justify-content: center !important;
+      gap: 0 !important;
+      padding-left: spacing(2);
+      padding-right: spacing(2);
+    }
+
+    .dropdown__icon {
+      margin: 0; // center icon
+      display: block;
+    }
+
+    // .dropdown_label,
+    // .dropdown__arrow {
+    //   display: none;
+    // }
+
+    .dropdown__menu {
+      margin-left: spacing(-4);
+      // position: absolute;
+      // left: 100%;
+      // top: 0.25rem;
+      // background: transparent;
+      // z-index: 59;
+    }
+  }
 
   &__trigger {
     width: 100%;

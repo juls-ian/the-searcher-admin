@@ -4,7 +4,7 @@ import { HugeiconsIcon } from '@hugeicons/vue'
 import {
   Album02Icon,
   Archive02Icon,
-  ArrowRight01Icon,
+  ArrowRightDoubleIcon,
   BookOpen02Icon,
   Calendar01Icon,
   CellsIcon,
@@ -17,8 +17,7 @@ import {
 } from '@hugeicons/core-free-icons/index'
 import NavDropdown from './NavDropdown.vue'
 import router from '@/router'
-
-const auth = useAuthStore()
+import { onBeforeMount, onMounted, ref, watch } from 'vue'
 
 const publisherItems = [
   { label: 'Publish', path: '/publisher/publish' },
@@ -56,20 +55,72 @@ const staffItems = [
   { label: 'Editorial Board', path: '/editorial-board' },
 ]
 
+const auth = useAuthStore()
+const surfaceDark = '#181818'
+const isExpanded = ref(true)
+
+const windowWidth = ref(window.innerWidth)
+
+// Match the current screen width: in sync when resizing
+const handleResize = () => {
+  windowWidth.value = window.innerWidth
+}
+
+// Add event listener: attach when component appears
+onMounted(() => {
+  // Whenever the screen resizes, call the function
+  window.addEventListener('resize', handleResize)
+  handleResize() // run once on load
+})
+
+// Remove event listener: detach
+onBeforeMount(() => {
+  window.removeEventListener('resize', handleResize)
+})
+
+// Watch for screen changes & auto reset navbar on mobile
+watch(windowWidth, (newWidth) => {
+  if (newWidth < 992) {
+    // Always open on mobile
+    isExpanded.value = true
+  }
+})
+
 const handleLogout = async () => {
   await auth.logout()
   router.push({ name: 'login' })
 }
+
+const toggleNav = () => {
+  isExpanded.value = !isExpanded.value
+
+  if (isExpanded.value) console.log('nav is open')
+  if (!isExpanded.value) console.log('nav is closed')
+}
 </script>
 
 <template>
-  <nav class="navbar">
+  <!-- <transition name="navbar-slide"> -->
+  <nav class="navbar" :class="{ 'navbar--condensed': !isExpanded }">
+    <div class="navbar__trigger" @click="toggleNav">
+      <HugeiconsIcon
+        :class="{ 'navbar__trigger-icon--rotated': isExpanded }"
+        :icon="ArrowRightDoubleIcon"
+        :size="25"
+        :color="surfaceDark"
+      />
+    </div>
+
     <div class="navbar__header">
       <div class="navbar__logo">
-        <img src="@/assets/logos/searcher-logo-base.webp" alt="user id photo" />
-        <p>Administrator</p>
+        <img
+          class="navbar__logo-photo"
+          src="@/assets/logos/searcher-logo-base.webp"
+          alt="user id photo"
+        />
+        <p class="navbar__logo-title">Administrator</p>
       </div>
-      <hr class="navbar__divider" />
+      <hr class="navbar__divider navbar__divider-upper" />
       <div class="navbar__user">
         <img
           src="@/assets/photos/teams/andrew.webp"
@@ -87,77 +138,113 @@ const handleLogout = async () => {
         </div>
       </div>
 
-      <hr class="navbar__divider" />
+      <hr class="navbar__divider navbar__divider-lower" />
     </div>
 
     <div class="navbar__list">
       <!-- Dashboard -->
       <div class="navbar__item navbar__dashboard">
         <RouterLink class="navbar__router" :to="{ name: 'home' }" active-class="active">
-          <HugeiconsIcon :icon="DashboardSquare02Icon" :size="30" color="$text-light-main" />
-          <p>Dashboard</p>
+          <HugeiconsIcon :icon="DashboardSquare02Icon" :size="30" />
+          <p v-if="isExpanded">Dashboard</p>
         </RouterLink>
       </div>
 
       <!-- Publisher -->
       <div class="navbar__item navbar__publisher">
-        <NavDropdown label="Publisher" :icon="QuillWrite02Icon" :items="publisherItems" />
+        <NavDropdown
+          label="Publisher"
+          :icon="QuillWrite02Icon"
+          :items="publisherItems"
+          :props-visible="isExpanded"
+        />
       </div>
 
       <!-- Calendar -->
       <div class="navbar__item navbar__calendar">
         <RouterLink class="navbar__router" :to="{ name: 'calendar' }">
-          <HugeiconsIcon :icon="Calendar01Icon" :size="30" color="$text-light-main" />
-          <p>Calendar</p>
+          <HugeiconsIcon :icon="Calendar01Icon" :size="30" />
+          <p v-if="isExpanded">Calendar</p>
         </RouterLink>
       </div>
 
       <!-- Bulletin -->
       <div class="navbar__item navbar__bulletin">
-        <NavDropdown label="Bulletin" :icon="StickyNote02Icon" :items="bulletinItems" />
+        <NavDropdown
+          label="Bulletin"
+          :icon="StickyNote02Icon"
+          :items="bulletinItems"
+          :props-visible="isExpanded"
+        />
       </div>
 
       <!-- Multimedia -->
       <div class="navbar__item navbar__multimedia">
-        <NavDropdown label="Multimedia" :icon="Album02Icon" :items="multimediaItems" />
+        <NavDropdown
+          label="Multimedia"
+          :icon="Album02Icon"
+          :items="multimediaItems"
+          :props-visible="isExpanded"
+        />
       </div>
 
       <!-- Archives -->
       <div class="navbar__item navbar__archives">
-        <NavDropdown label="Archives" :icon="Archive02Icon" :items="archivesItems" />
+        <NavDropdown
+          label="Archives"
+          :icon="Archive02Icon"
+          :items="archivesItems"
+          :props-visible="isExpanded"
+        />
       </div>
 
       <!-- Issues -->
       <div class="navbar__item navbar__issues">
-        <NavDropdown label="Issues" :icon="BookOpen02Icon" :items="issuesItems" />
+        <NavDropdown
+          label="Issues"
+          :icon="BookOpen02Icon"
+          :items="issuesItems"
+          :props-visible="isExpanded"
+        />
       </div>
 
       <!-- Segments -->
       <div class="navbar__item navbar__archive">
-        <NavDropdown label="Segments" :icon="CellsIcon" :items="segmentItems" />
+        <NavDropdown
+          label="Segments"
+          :icon="CellsIcon"
+          :items="segmentItems"
+          :props-visible="isExpanded"
+        />
       </div>
 
       <!-- Staff -->
       <div class="navbar__item navbar__archive">
-        <NavDropdown label="Staff" :icon="UserGroup03Icon" :items="staffItems" />
+        <NavDropdown
+          label="Staff"
+          :icon="UserGroup03Icon"
+          :items="staffItems"
+          :props-visible="isExpanded"
+        />
       </div>
 
       <!-- Newsletter -->
       <div class="navbar__item navbar__newsletter">
         <RouterLink class="navbar__router">
-          <HugeiconsIcon :icon="Mailbox01Icon" :size="30" color="$text-light-main" />
-          <p>Newsletter</p>
+          <HugeiconsIcon :icon="Mailbox01Icon" :size="30" />
+          <p v-if="isExpanded">Newsletter</p>
         </RouterLink>
       </div>
     </div>
 
     <div class="navbar__logout">
-      <HugeiconsIcon :icon="LogoutCircle02Icon" :size="30" color="$text-light-main" />
       <button class="navbar__logout-button" @click.prevent="handleLogout">
-        <p>Logout</p>
+        <HugeiconsIcon :icon="LogoutCircle02Icon" :size="30" />
+        <p v-if="isExpanded">Logout</p>
       </button>
     </div>
   </nav>
+  <!-- </transition> -->
 </template>
 
 <style lang="scss">
@@ -171,19 +258,135 @@ const handleLogout = async () => {
   flex-direction: column;
   align-items: start;
   justify-content: start;
-  overflow: hidden;
-  overflow-y: auto;
+  overflow: visible;
   padding-top: spacing(10);
   position: relative; // for the pseudo-element
   background-image: url('@/assets/graphics/navbar-bg-1.webp');
   background-position: top;
   background-repeat: no-repeat;
   background-size: cover; // show entire image
+  // background-attachment: initial;
+
+  @include respond-to-mf(md) {
+    width: 60%;
+
+    &--condensed {
+      width: auto;
+    }
+  }
+
+  @include respond-to-mf(tablet-sm) {
+    width: 40%;
+
+    &--condensed {
+      width: auto;
+    }
+  }
 
   @include respond-to-mf(desktop-sm) {
     padding: 0;
-    width: 17%;
+    width: 25%;
     height: 100vh;
+
+    &--condensed {
+      width: 15%;
+    }
+  }
+  @include respond-to-mf(desktop-md) {
+    padding: 0;
+    width: 20%;
+    height: 100vh;
+
+    &--condensed {
+      width: auto;
+    }
+  }
+
+  &--condensed {
+    width: 50%;
+    // min-width: fit-content;
+    padding-left: spacing(2);
+    padding-right: spacing(2);
+
+    @include respond-to-mf(tablet-lg) {
+      width: 6%;
+      align-items: start !important;
+      justify-content: start !important;
+    }
+
+    .navbar__item {
+      margin-left: spacing(2);
+      width: auto;
+      justify-content: center;
+
+      @include respond-to-mf(tablet-lg) {
+        align-items: start !important;
+        justify-content: start !important;
+      }
+    }
+
+    .navbar__router {
+      justify-content: center;
+      padding: spacing(2);
+
+      &.active {
+        border-radius: 20px;
+        margin-left: calc(-1 * spacing(2));
+        width: calc(100% + spacing(4));
+        padding: spacing(3);
+      }
+    }
+
+    .navbar__logo {
+      @include respond-to-mf(tablet-lg) {
+        justify-content: center;
+      }
+    }
+
+    .navbar__logo-photo {
+      @include respond-to-mf(tablet-lg) {
+        width: auto;
+        max-width: 6rem;
+      }
+    }
+
+    .navbar__logo-title,
+    .navbar__user-name,
+    .navbar__user-position {
+      @include respond-to-mf(tablet-lg) {
+        display: none;
+      }
+    }
+
+    .navbar__divider-upper {
+      @include respond-to-mf(tablet-lg) {
+        visibility: hidden;
+      }
+    }
+
+    .navbar__user {
+      justify-content: center;
+    }
+
+    .navbar__user-icon {
+      width: 7rem;
+      height: 7rem;
+    }
+
+    .navbar__logout {
+      // padding-left: spacing(2);
+      // padding-right: spacing(2);
+
+      button {
+        justify-content: center;
+      }
+    }
+  }
+
+  // Navbar content stay above overlay
+  > * {
+    position: relative;
+    z-index: 1;
   }
 
   // Overlay
@@ -195,10 +398,41 @@ const handleLogout = async () => {
     z-index: 0;
   }
 
-  // Navbar content stay above overlay
-  > * {
-    position: relative;
-    z-index: 1;
+  &__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-end; // move to left
+    width: 3rem;
+    height: 3rem;
+    background: $surface-soft;
+    border-radius: 50px;
+    z-index: 3;
+    cursor: pointer;
+    // remove in document flow
+    position: absolute;
+    // top: 50%;
+    right: -1.5rem;
+    transform: translateY(-50%); // center vertically
+
+    @include respond-to-df(tablet-sm) {
+      visibility: hidden;
+    }
+
+    @include respond-to-mf(tablet-sm) {
+      top: 5%;
+    }
+
+    &-icon {
+      display: block; // removes inline spacing
+
+      &--rotated {
+        transform: rotate(180deg);
+      }
+
+      @include respond-to-mf(tablet-sm) {
+      }
+    }
   }
 
   &__header {
@@ -217,7 +451,7 @@ const handleLogout = async () => {
       flex-direction: row;
     }
 
-    p {
+    &-title {
       display: none;
       text-transform: uppercase;
       font-weight: 700;
@@ -228,7 +462,7 @@ const handleLogout = async () => {
       }
     }
 
-    img {
+    &-photo {
       width: 100%;
       height: auto;
       max-width: 40%;
@@ -318,6 +552,9 @@ const handleLogout = async () => {
       }
 
       @include respond-to-mf(tablet-lg) {
+        display: none;
+      }
+      @include respond-to-mf(desktop-sm) {
         display: block;
       }
     }
@@ -361,7 +598,7 @@ const handleLogout = async () => {
     }
 
     @include respond-to-mf(desktop-sm) {
-      width: calc(100% - #{spacing(6)});
+      width: calc(95% - #{spacing(6)});
     }
 
     &:hover {
@@ -379,7 +616,7 @@ const handleLogout = async () => {
     }
 
     p {
-      color: $text-light-main;
+      color: $surface-soft;
       flex: 1; // take up remaining space
     }
   }
@@ -393,7 +630,7 @@ const handleLogout = async () => {
     transition: all 0.2s ease;
 
     svg {
-      color: $text-light-main;
+      color: $surface-soft;
     }
 
     &.active {
@@ -422,13 +659,38 @@ const handleLogout = async () => {
   &__logout {
     width: 100%;
     margin-top: auto;
-    display: flex;
-    align-items: center;
-    gap: spacing(3);
     padding: spacing(6) spacing(4) spacing(5) spacing(4);
     cursor: pointer;
     position: sticky;
     bottom: 0;
+
+    button {
+      display: flex;
+      align-items: start;
+      gap: spacing(3);
+
+      cursor: pointer;
+    }
+
+    &:hover {
+      opacity: 0.8;
+    }
   }
+}
+
+.navbar-slide-enter-active,
+.navbar-slide-leave-active {
+  transition: all 0.3s ease-in-out;
+}
+
+.navbar-slide-enter-from,
+.navbar-slide-leave-to {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+.navbar-slide-enter-to,
+.dropdown-slide-leave-from {
+  opacity: 1;
 }
 </style>
