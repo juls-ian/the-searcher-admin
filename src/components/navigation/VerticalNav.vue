@@ -97,6 +97,13 @@ const toggleNav = () => {
   if (isExpanded.value) console.log('nav is open')
   if (!isExpanded.value) console.log('nav is closed')
 }
+
+const handleDropdownItemClicked = () => {
+  // Only expand if navbar is condensed and on large tablets +
+  if (!isExpanded.value && windowWidth.value >= 992) {
+    isExpanded.value = true
+  }
+}
 </script>
 
 <template>
@@ -146,7 +153,7 @@ const toggleNav = () => {
       <div class="navbar__item navbar__dashboard">
         <RouterLink class="navbar__router" :to="{ name: 'home' }" active-class="active">
           <HugeiconsIcon :icon="DashboardSquare02Icon" :size="30" />
-          <p v-if="isExpanded">Dashboard</p>
+          <p v-show="isExpanded">Dashboard</p>
         </RouterLink>
       </div>
 
@@ -157,6 +164,7 @@ const toggleNav = () => {
           :icon="QuillWrite02Icon"
           :items="publisherItems"
           :props-visible="isExpanded"
+          @item-clicked="handleDropdownItemClicked"
         />
       </div>
 
@@ -164,7 +172,7 @@ const toggleNav = () => {
       <div class="navbar__item navbar__calendar">
         <RouterLink class="navbar__router" :to="{ name: 'calendar' }">
           <HugeiconsIcon :icon="Calendar01Icon" :size="30" />
-          <p v-if="isExpanded">Calendar</p>
+          <p v-show="isExpanded">Calendar</p>
         </RouterLink>
       </div>
 
@@ -232,7 +240,7 @@ const toggleNav = () => {
       <div class="navbar__item navbar__newsletter">
         <RouterLink class="navbar__router">
           <HugeiconsIcon :icon="Mailbox01Icon" :size="30" />
-          <p v-if="isExpanded">Newsletter</p>
+          <p v-show="isExpanded">Newsletter</p>
         </RouterLink>
       </div>
     </div>
@@ -240,7 +248,7 @@ const toggleNav = () => {
     <div class="navbar__logout">
       <button class="navbar__logout-button" @click.prevent="handleLogout">
         <HugeiconsIcon :icon="LogoutCircle02Icon" :size="30" />
-        <p v-if="isExpanded">Logout</p>
+        <p v-show="isExpanded">Logout</p>
       </button>
     </div>
   </nav>
@@ -265,7 +273,9 @@ const toggleNav = () => {
   background-position: top;
   background-repeat: no-repeat;
   background-size: cover; // show entire image
-  // background-attachment: initial;
+  transition:
+    width 0.3s ease-in-out,
+    padding 0.3s ease-in-out;
 
   @include respond-to-mf(md) {
     width: 60%;
@@ -307,11 +317,18 @@ const toggleNav = () => {
     // min-width: fit-content;
     padding-left: spacing(2);
     padding-right: spacing(2);
+    transition:
+      width 0.3s ease-in-out,
+      padding 0.3s ease-in-out;
 
     @include respond-to-mf(tablet-lg) {
-      width: 6%;
+      width: 9%;
       align-items: start !important;
       justify-content: start !important;
+    }
+
+    @include respond-to-mf(desktop-sm) {
+      width: 6%;
     }
 
     .navbar__item {
@@ -328,6 +345,15 @@ const toggleNav = () => {
     .navbar__router {
       justify-content: center;
       padding: spacing(2);
+      transition:
+        width 0.3s ease-in-out,
+        margin 0.3s ease-in-out;
+      p {
+        opacity: 1;
+        transition:
+          opacity 0.3s ease-in-out,
+          width 0.3s ease-in-out;
+      }
 
       &.active {
         border-radius: 20px;
@@ -347,6 +373,7 @@ const toggleNav = () => {
       @include respond-to-mf(tablet-lg) {
         width: auto;
         max-width: 6rem;
+        transition: opacity 0.2s ease-in-out;
       }
     }
 
@@ -355,6 +382,8 @@ const toggleNav = () => {
     .navbar__user-position {
       @include respond-to-mf(tablet-lg) {
         display: none;
+        opacity: 0;
+        transition: opacity 0.2s ease-in-out;
       }
     }
 
@@ -368,9 +397,16 @@ const toggleNav = () => {
       justify-content: center;
     }
 
+    .navbar__user-details {
+      max-width: 0;
+    }
+
     .navbar__user-icon {
       width: 7rem;
       height: 7rem;
+      transition:
+        width 0.3s ease-in-out,
+        height 0.3s ease-in-out;
     }
 
     .navbar__logout {
@@ -446,6 +482,9 @@ const toggleNav = () => {
     align-items: center;
     position: relative;
     margin-bottom: spacing(3);
+    transition:
+      width 0.3s ease-in-out,
+      height 0.3s ease-in-out;
 
     @include respond-to-mf(desktop-sm) {
       flex-direction: row;
@@ -490,6 +529,11 @@ const toggleNav = () => {
     margin-left: spacing(3);
     margin-bottom: spacing(5);
     gap: spacing(5);
+    position: relative;
+    // transition:
+    //   width 0.3s ease-in-out,
+    //   height 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
 
     &-icon {
       width: 10rem;
@@ -514,23 +558,23 @@ const toggleNav = () => {
     @include respond-to-mf(desktop-sm) {
       text-align: start;
     }
-  }
 
-  &__user-name {
-    font-size: $font-size-lg;
-    font-weight: 600;
-    text-align: center;
+    &-name {
+      font-size: $font-size-lg;
+      font-weight: 600;
+      text-align: center;
 
-    @include respond-to-mf(desktop-sm) {
-      font-size: $font-size-base;
+      @include respond-to-mf(desktop-sm) {
+        font-size: $font-size-base;
+      }
     }
-  }
 
-  &__user-position {
-    font-size: $font-size-base;
+    &-position {
+      font-size: $font-size-base;
 
-    @include respond-to-mf(desktop-sm) {
-      font-size: $font-size-sm;
+      @include respond-to-mf(desktop-sm) {
+        font-size: $font-size-sm;
+      }
     }
   }
 
@@ -575,7 +619,6 @@ const toggleNav = () => {
     padding-bottom: spacing(10);
     gap: spacing(8);
     flex-grow: 1; // ensures list fills available space
-    overflow-block: inherit;
     overflow-y: auto;
 
     &::-webkit-scrollbar {
@@ -592,6 +635,10 @@ const toggleNav = () => {
     margin-left: spacing(4);
     //  100% - 40px: take 100% of the container’s width, then subtract some value from i
     width: calc(100% - #{spacing(10)}); // compensate for parent's margin-left
+    overflow: visible;
+    transition:
+      width 0.3s ease-in-out,
+      margin 0.3s ease-in-out;
 
     @include respond-to-mf(desktop-sm) {
       width: calc(100% - #{spacing(6)});
@@ -618,6 +665,7 @@ const toggleNav = () => {
     p {
       color: $surface-soft;
       flex: 1; // take up remaining space
+      transition: opacity 0.2s ease-in-out;
     }
   }
 
@@ -627,9 +675,11 @@ const toggleNav = () => {
     gap: spacing(3);
     align-items: center;
     width: 100%;
-    transition: all 0.2s ease;
+    overflow: visible;
+    transition: all 0.2s ease-in-out;
 
     svg {
+      flex-shrink: 0;
       color: $surface-soft;
     }
 

@@ -1,7 +1,7 @@
 <script setup>
 import { HugeiconsIcon } from '@hugeicons/vue'
 import { ArrowRight01Icon } from '@hugeicons/core-free-icons/index'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
 const props = defineProps({
   icon: {
@@ -34,10 +34,35 @@ const props = defineProps({
 })
 
 const isOpen = ref(false)
+const emit = defineEmits(['item-clicked'])
 
 const toggleDropdown = () => {
   isOpen.value = !isOpen.value
+
+  // If navbar is condensed emit event to expand
+  if (!props.propsVisible) {
+    emit('item-clicked')
+  }
 }
+
+// Will be emitted to the parent
+const handleItemClick = () => {
+  emit('item-clicked')
+  // Optional: close dropdown after clicking item
+  // isOpen.value = false
+}
+
+// WATCHER: when propsVisible change (T/F) -> close dropdown when navbar is condensed
+watch(
+  () => props.propsVisible, // watch this props
+  // CALLBACK: function receiver of new value after change
+  (newValue) => {
+    // newValue === false or NOT newValue,
+    if (!newValue) {
+      isOpen.value = false //  close dd
+    }
+  },
+)
 </script>
 
 <template>
@@ -61,7 +86,13 @@ const toggleDropdown = () => {
     <transition name="dropdown-fade">
       <!-- Dropdown menu  -->
       <div v-if="isOpen" class="dropdown__menu">
-        <RouterLink class="dropdown__item" v-for="item in items" :key="item.path" :to="item.path">
+        <RouterLink
+          class="dropdown__item"
+          v-for="item in items"
+          :key="item.path"
+          :to="item.path"
+          @click="handleItemClick"
+        >
           {{ item.label }}
         </RouterLink>
       </div>
@@ -98,18 +129,14 @@ const toggleDropdown = () => {
       display: block;
     }
 
-    // .dropdown_label,
-    // .dropdown__arrow {
-    //   display: none;
-    // }
+    .dropdown_label,
+    .dropdown__arrow {
+      display: none;
+    }
 
     .dropdown__menu {
       margin-left: spacing(-4);
-      // position: absolute;
-      // left: 100%;
-      // top: 0.25rem;
-      // background: transparent;
-      // z-index: 59;
+      display: none;
     }
   }
 
@@ -134,6 +161,7 @@ const toggleDropdown = () => {
   }
 
   &__icon {
+    flex-shrink: 0; // prevent icon from shrinking when toggling nav
     color: $surface-soft;
   }
 
