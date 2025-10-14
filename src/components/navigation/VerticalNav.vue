@@ -348,11 +348,13 @@ const handleDropdownItemClicked = () => {
       transition:
         width 0.3s ease-in-out,
         margin 0.3s ease-in-out;
+
       p {
-        opacity: 1;
-        transition:
-          opacity 0.3s ease-in-out,
-          width 0.3s ease-in-out;
+        opacity: 0;
+        /** not necessary */
+        // transition:
+        //   opacity 0.3s ease-in-out,
+        //   width 0.3s ease-in-out;
       }
 
       &.active {
@@ -365,25 +367,30 @@ const handleDropdownItemClicked = () => {
 
     .navbar__logo {
       @include respond-to-mf(tablet-lg) {
-        justify-content: center;
+        justify-content: start;
+        left: spacing(2);
+      }
+
+      &-title {
+        @include respond-to-mf(tablet-lg) {
+          opacity: 0;
+          // transition: opacity 0.2s ease-in-out;
+        }
+      }
+
+      &-photo {
+        @include respond-to-mf(tablet-lg) {
+          width: auto;
+          max-width: 6rem;
+        }
       }
     }
 
-    .navbar__logo-photo {
-      @include respond-to-mf(tablet-lg) {
-        width: auto;
-        max-width: 6rem;
-        transition: opacity 0.2s ease-in-out;
-      }
-    }
-
-    .navbar__logo-title,
     .navbar__user-name,
     .navbar__user-position {
       @include respond-to-mf(tablet-lg) {
-        display: none;
+        // display: none;
         opacity: 0;
-        transition: opacity 0.2s ease-in-out;
       }
     }
 
@@ -395,18 +402,15 @@ const handleDropdownItemClicked = () => {
 
     .navbar__user {
       justify-content: center;
-    }
 
-    .navbar__user-details {
-      max-width: 0;
-    }
+      &-details {
+        // width: 0;
+      }
 
-    .navbar__user-icon {
-      width: 7rem;
-      height: 7rem;
-      transition:
-        width 0.3s ease-in-out,
-        height 0.3s ease-in-out;
+      &-icon {
+        width: 7rem;
+        height: 7rem;
+      }
     }
 
     .navbar__logout {
@@ -450,13 +454,14 @@ const handleDropdownItemClicked = () => {
     // top: 50%;
     right: -1.5rem;
     transform: translateY(-50%); // center vertically
-
-    @include respond-to-df(tablet-sm) {
-      visibility: hidden;
-    }
+    visibility: hidden;
 
     @include respond-to-mf(tablet-sm) {
       top: 5%;
+    }
+
+    @include respond-to-mf(tablet-lg) {
+      visibility: visible;
     }
 
     &-icon {
@@ -491,12 +496,20 @@ const handleDropdownItemClicked = () => {
     }
 
     &-title {
-      display: none;
+      // display: none;
       text-transform: uppercase;
       font-weight: 700;
+      position: absolute;
+      opacity: 0;
 
       @include respond-to-mf(desktop-sm) {
-        display: block;
+        opacity: 1;
+        position: relative;
+        // Smooth transition
+        transition:
+          opacity 0.3s ease-in-out,
+          transform 0.3s ease-in-out;
+        // display: block;
         flex-direction: row;
       }
     }
@@ -528,12 +541,14 @@ const handleDropdownItemClicked = () => {
     align-items: center;
     margin-left: spacing(3);
     margin-bottom: spacing(5);
+    margin-top: spacing(-7);
     gap: spacing(5);
     position: relative;
-    // transition:
-    //   width 0.3s ease-in-out,
-    //   height 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
+
+    @include respond-to-mf(tablet-lg) {
+      margin-top: 0;
+    }
 
     &-icon {
       width: 10rem;
@@ -559,6 +574,16 @@ const handleDropdownItemClicked = () => {
       text-align: start;
     }
 
+    &-details {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      overflow: hidden; // keep layout stable
+      // max-width: 20rem;
+      transition: all 0.3s ease-in-out;
+    }
+
     &-name {
       font-size: $font-size-lg;
       font-weight: 600;
@@ -575,6 +600,16 @@ const handleDropdownItemClicked = () => {
       @include respond-to-mf(desktop-sm) {
         font-size: $font-size-sm;
       }
+    }
+
+    &-name,
+    &-position {
+      opacity: 1;
+      transform: translateX(0);
+      transition:
+        opacity 0.3s ease-in-out,
+        transform 0.3s ease-in-out;
+      white-space: nowrap;
     }
   }
 
@@ -677,6 +712,12 @@ const handleDropdownItemClicked = () => {
     width: 100%;
     overflow: visible;
     transition: all 0.2s ease-in-out;
+    transition: opacity 0.2s ease-in-out;
+
+    p {
+      opacity: 1;
+      transition: opacity 0.2s ease-in-out;
+    }
 
     svg {
       flex-shrink: 0;
@@ -714,16 +755,21 @@ const handleDropdownItemClicked = () => {
     position: sticky;
     bottom: 0;
 
+    @include respond-to-df(tablet-sm) {
+      // position: relative;
+      background: rgba(24, 24, 24, 0.8);
+    }
+
     button {
       display: flex;
       align-items: start;
       gap: spacing(3);
 
       cursor: pointer;
-    }
 
-    &:hover {
-      opacity: 0.8;
+      &:hover {
+        opacity: 0.8;
+      }
     }
   }
 }
