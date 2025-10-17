@@ -58,13 +58,14 @@ const staffItems = [
 const auth = useAuthStore()
 const surfaceDark = '#181818'
 const isExpanded = ref(true)
-
 const windowWidth = ref(window.innerWidth)
 
-// Match the current screen width: in sync when resizing
-const handleResize = () => {
-  windowWidth.value = window.innerWidth
-}
+defineProps({
+  isVisible: {
+    type: Boolean,
+    required: true,
+  },
+})
 
 // Add event listener: attach when component appears
 onMounted(() => {
@@ -96,6 +97,11 @@ const toggleNav = () => {
 
   if (isExpanded.value) console.log('nav is open')
   if (!isExpanded.value) console.log('nav is closed')
+}
+
+// Match the current screen width: in sync when resizing
+const handleResize = () => {
+  windowWidth.value = window.innerWidth
 }
 
 const handleDropdownItemClicked = () => {
@@ -255,7 +261,7 @@ const handleDropdownItemClicked = () => {
   <!-- </transition> -->
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @use '@/assets/utils' as *;
 
 .navbar {
@@ -276,6 +282,24 @@ const handleDropdownItemClicked = () => {
   transition:
     width 0.3s ease-in-out,
     padding 0.3s ease-in-out;
+
+  /* MainLayout: Override widths when inside grid layout of .container parent
+    "&" = parent selector
+  */
+  .container & {
+    @include respond-to-mf(tablet-lg) {
+      width: 250px; // fixed width
+
+      &--condensed {
+        width: 80px; // fixed width
+      }
+    }
+  }
+
+  // FOR NOW
+  @include respond-to-df(tablet-lg) {
+    display: none;
+  }
 
   @include respond-to-mf(md) {
     width: 60%;
@@ -551,10 +575,15 @@ const handleDropdownItemClicked = () => {
     }
 
     &-icon {
-      width: 10rem;
-      height: 10rem;
+      width: 9rem;
+      height: 9rem;
       border-radius: 50%;
       object-fit: cover;
+
+      @include respond-to-mf(sm) {
+        width: 10rem;
+        height: 10rem;
+      }
 
       @include respond-to-mf(desktop-sm) {
         width: 8rem;
@@ -585,9 +614,13 @@ const handleDropdownItemClicked = () => {
     }
 
     &-name {
-      font-size: $font-size-lg;
+      font-size: $font-size-base;
       font-weight: 600;
       text-align: center;
+
+      @include respond-to-mf(sm) {
+        font-size: $font-size-lg;
+      }
 
       @include respond-to-mf(desktop-sm) {
         font-size: $font-size-base;
@@ -595,7 +628,11 @@ const handleDropdownItemClicked = () => {
     }
 
     &-position {
-      font-size: $font-size-base;
+      font-size: $font-size-sm;
+
+      @include respond-to-mf(sm) {
+        font-size: $font-size-base;
+      }
 
       @include respond-to-mf(desktop-sm) {
         font-size: $font-size-sm;

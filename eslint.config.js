@@ -25,6 +25,7 @@ export default defineConfig([
   skipFormatting,
   {
     rules: {
+      'vue/multi-word-component-names': 'error',
       'no-unused-vars': 'off',
     },
   },
