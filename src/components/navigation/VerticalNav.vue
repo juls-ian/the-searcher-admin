@@ -469,7 +469,7 @@ const handleDropdownItemClicked = () => {
     align-self: flex-end; // move to left
     width: 3rem;
     height: 3rem;
-    background: $surface-soft;
+    background: $surface-light;
     border-radius: 50px;
     z-index: 3;
     cursor: pointer;
@@ -654,7 +654,7 @@ const handleDropdownItemClicked = () => {
     width: 100%;
     height: 1px;
     display: block;
-    background: $surface-soft;
+    background: $surface-light;
     margin-top: spacing(7);
     margin-bottom: spacing(5);
     overflow: hidden;
@@ -735,7 +735,7 @@ const handleDropdownItemClicked = () => {
     }
 
     p {
-      color: $surface-soft;
+      color: $surface-light;
       flex: 1; // take up remaining space
       transition: opacity 0.2s ease-in-out;
     }
@@ -758,7 +758,7 @@ const handleDropdownItemClicked = () => {
 
     svg {
       flex-shrink: 0;
-      color: $surface-soft;
+      color: $surface-light;
     }
 
     &.active {

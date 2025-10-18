@@ -162,7 +162,7 @@ watch(
 
   &__icon {
     flex-shrink: 0; // prevent icon from shrinking when toggling nav
-    color: $surface-soft;
+    color: $surface-light;
   }
 
   &__arrow {

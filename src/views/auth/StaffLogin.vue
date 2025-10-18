@@ -162,7 +162,7 @@ const handleLogin = async () => {
     position: relative;
     align-items: center;
     justify-content: center;
-    background-color: $surface-soft;
+    background-color: $surface-light;
     flex-direction: column;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     overflow: hidden; // prevent children from overflowing
