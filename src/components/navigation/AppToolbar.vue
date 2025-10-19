@@ -7,19 +7,56 @@ import {
   UserIcon,
 } from '@hugeicons/core-free-icons/index'
 import { HugeiconsIcon } from '@hugeicons/vue'
-import { ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 
 const surfaceDark = '#181818'
 const isSearchActive = ref(false)
+const currentDateTime = ref('') // current datetime
+const emit = defineEmits(['click-menu'])
 
 const toggleSearchbar = () => {
   isSearchActive.value = !isSearchActive.value
 }
+
+const handleMenuClick = () => {
+  emit('click-menu')
+}
+
+// Datetime
+const updateDateTime = () => {
+  const now = new Date()
+  // formatting
+  const options = {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  }
+  currentDateTime.value = now.toLocaleDateString('en-US', options)
+}
+
+let intervalId = null
+
+onMounted(() => {
+  updateDateTime()
+  intervalId = setInterval(updateDateTime, 60000) // update every minute
+})
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId)
+})
 </script>
 
 <template>
   <nav class="toolbar" :class="{ 'toolbar--search-active': isSearchActive }">
-    <HugeiconsIcon class="toolbar__menu" :icon="Menu01Icon" :size="25" :color="surfaceDark" />
+    <HugeiconsIcon
+      class="toolbar__menu"
+      :icon="Menu01Icon"
+      :size="25"
+      :color="surfaceDark"
+      @click="handleMenuClick"
+    />
     <div class="toolbar__logo">
       <img
         src="@/assets/logos/searcher-logo-base.webp"
@@ -38,6 +75,16 @@ const toggleSearchbar = () => {
         :color="surfaceDark"
         @click="toggleSearchbar"
       />
+
+      <button class="toolbar__search-button">
+        <p>Search</p>
+      </button>
+    </div>
+
+    <div class="toolbar__datetime">
+      <p>
+        {{ currentDateTime }}
+      </p>
     </div>
 
     <HugeiconsIcon
@@ -65,9 +112,13 @@ const toggleSearchbar = () => {
   background: $surface-light;
 
   @include respond-to-mf(tablet-lg) {
-    width: 100%;
+    width: 80%;
+    height: 6rem;
     margin: spacing(2);
+    padding: 0 spacing(5);
     border-radius: 20px;
+    justify-content: flex-start;
+    gap: spacing(6);
   }
 
   &__notification,
@@ -85,6 +136,12 @@ const toggleSearchbar = () => {
       // display: none;
       visibility: hidden;
       position: absolute;
+    }
+  }
+
+  &__notification {
+    @include respond-to-mf(tablet-lg) {
+      justify-self: self-end;
     }
   }
 
@@ -119,6 +176,11 @@ const toggleSearchbar = () => {
     position: relative;
     transition: all 0.4s ease-in-out;
 
+    @include respond-to-mf(tablet-lg) {
+      width: 30%;
+      // margin-right: auto; // position on the left side
+    }
+
     &-field {
       width: 0;
       height: 3rem;
@@ -144,6 +206,18 @@ const toggleSearchbar = () => {
       //   // white circle on collapse fix
       //   background-color 0.3s ease-in-out;
       outline: none;
+
+      @include respond-to-mf(tablet-lg) {
+        display: block;
+        position: relative;
+        opacity: 1;
+        width: 100%;
+        font-size: $font-size-base;
+        border-radius: 5px;
+        padding-left: spacing(8);
+        padding-right: spacing(16);
+        outline: 1px solid $surface-dark;
+      }
     }
 
     &-icon {
@@ -153,6 +227,50 @@ const toggleSearchbar = () => {
       right: 0;
       flex-shrink: 0;
       opacity: 1;
+
+      @include respond-to-mf(tablet-lg) {
+        pointer-events: none;
+        position: absolute;
+        left: 0;
+        padding-left: spacing(2);
+      }
+    }
+
+    &-button {
+      display: none;
+
+      @include respond-to-mf(tablet-lg) {
+        position: absolute;
+        display: block;
+        right: 0;
+        background: $primary-accent;
+        border-radius: 5px;
+        padding: 0 spacing(1);
+        margin-right: spacing(1);
+        margin-left: spacing(10);
+        cursor: pointer;
+      }
+
+      p {
+        font-size: $font-size-sm;
+      }
+    }
+  }
+
+  &__datetime {
+    display: none;
+
+    p {
+      color: $text-dark-main;
+      font-weight: 500;
+    }
+
+    @include respond-to-mf(tablet-lg) {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-shrink: 0;
+      margin-right: auto; // position on the left side
     }
   }
 
