@@ -113,8 +113,8 @@ const handleDropdownItemClicked = () => {
 </script>
 
 <template>
-  <!-- <transition name="navbar-slide"> -->
-  <nav class="navbar" :class="{ 'navbar--condensed': !isExpanded }">
+  <!--                                                            Vue's dynamic attribute binding || data-visible is a custom HTML data attribute-->
+  <nav class="navbar" :class="{ 'navbar--condensed': !isExpanded }" :data-visible="isVisible">
     <div class="navbar__trigger" @click="toggleNav">
       <HugeiconsIcon
         :class="{ 'navbar__trigger-icon--rotated': isExpanded }"
@@ -258,7 +258,6 @@ const handleDropdownItemClicked = () => {
       </button>
     </div>
   </nav>
-  <!-- </transition> -->
 </template>
 
 <style lang="scss" scoped>
@@ -296,9 +295,22 @@ const handleDropdownItemClicked = () => {
     }
   }
 
-  // FOR NOW
+  // Hide nav in tablet-lg below devices
   @include respond-to-df(tablet-lg) {
     display: none;
+
+    /* CSS attribute selector: show/hide navbar
+      applies these style on the HTML data attribute (data-visible) binding above
+    */
+    &[data-visible='true'] {
+      display: block;
+      // position: fixed;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 100;
+      animation: slideIn 0.3s ease-in-out;
+    }
   }
 
   @include respond-to-mf(md) {
@@ -825,5 +837,14 @@ const handleDropdownItemClicked = () => {
 .navbar-slide-enter-to,
 .dropdown-slide-leave-from {
   opacity: 1;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 </style>
