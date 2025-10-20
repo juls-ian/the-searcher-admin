@@ -143,7 +143,7 @@ async function login(credentials) {
       error.value = err.response?.data?.message || 'Login Failed'
       throw err
     } finally {
-      loading.value = false
+      loading.value = false // This is the main problem, will be removed since the handleLogin function in the StaffLogin perform two separate await operations 
     }
   }
   ```

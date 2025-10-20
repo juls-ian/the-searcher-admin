@@ -20,7 +20,6 @@ export const useAuthStore = defineStore('auth', () => {
 
   // ACTIONS
   async function login(credentials) {
-    loading.value = true
     error.value = null
 
     try {
@@ -37,14 +36,12 @@ export const useAuthStore = defineStore('auth', () => {
       // Since interceptor unwraps, response is already the data object
       token.value = response.payload.token // payload = interceptor in api.js
       user.value = response.payload.user
-
       localStorage.setItem('auth_token', token.value)
+
       return { success: true }
     } catch (err) {
       error.value = err.response?.data?.message || 'Login Failed'
       throw err
-    } finally {
-      loading.value = false
     }
   }
 
@@ -79,10 +76,22 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  function delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms))
+  }
   // Initialize auth state on app load
   async function initialize() {
-    if (token.value) {
-      await fetchUser()
+    loading.value = true
+    try {
+      if (token.value) {
+        await Promise.all([
+          // run at the same time - code will wait until both are done before continuing.
+          fetchUser(),
+          delay(1000), // ensures minimum 1s preloader
+        ])
+      }
+    } finally {
+      loading.value = false
     }
   }
 
