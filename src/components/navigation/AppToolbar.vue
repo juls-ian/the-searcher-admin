@@ -110,6 +110,9 @@ onUnmounted(() => {
   background: $surface-light;
   padding: spacing(2) spacing(3);
   background: $surface-light;
+  box-shadow:
+    rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 
   @include respond-to-mf(tablet-lg) {
     width: 80%;
@@ -189,7 +192,8 @@ onUnmounted(() => {
       background-color: transparent; // make the  invisible when collapsed
       color: $text-dark-main;
       border: none;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      // box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
       border-radius: 24px;
       padding: spacing(2) spacing(5) spacing(2) spacing(2);
       transition:
@@ -217,6 +221,7 @@ onUnmounted(() => {
         padding-left: spacing(8);
         padding-right: spacing(16);
         outline: 1px solid $surface-dark;
+        box-shadow: none;
       }
     }
 

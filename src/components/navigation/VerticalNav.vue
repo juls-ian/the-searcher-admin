@@ -124,7 +124,7 @@ const handleDropdownItemClicked = () => {
       />
     </div>
 
-    <div class="navbar__header">
+    <div class="navbar__header" v-if="auth.user">
       <div class="navbar__logo">
         <img
           class="navbar__logo-photo"
