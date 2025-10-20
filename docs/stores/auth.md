@@ -87,6 +87,67 @@ async function login(credentials) {
     }
   }
 ```
+### 1.3: slight problem when used with preloader
+```javascript
+  async function login(credentials) {
+    loading.value = true
+    error.value = null
+
+    try {
+      // Login request - must match Laravel login route
+      const response = await api.post('/auth/login', {
+        emailOrId: credentials.emailOrId,
+        password: credentials.password,
+      })
+
+      console.log('Full response:', response)
+      console.log('Token:', response.payload.token)
+      console.log('User:', response.payload.user)
+
+      // Since interceptor unwraps, response is already the data object
+      token.value = response.payload.token // payload = interceptor in api.js
+      user.value = response.payload.user
+
+      localStorage.setItem('auth_token', token.value)
+      return { success: true }
+    } catch (err) {
+      error.value = err.response?.data?.message || 'Login Failed'
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+  ```
+### 1.4: not enough fix on preloader pause 
+```javascript
+  async function login(credentials) {
+    loading.value = true
+    error.value = null
+
+    try {
+      // Login request - must match Laravel login route
+      const response = await api.post('/auth/login', {
+        emailOrId: credentials.emailOrId,
+        password: credentials.password,
+      })
+
+      // Since interceptor unwraps, response is already the data object
+      token.value = response.payload.token // payload = interceptor in api.js
+      user.value = response.payload.user
+
+      localStorage.setItem('auth_token', token.value)
+      // Fetch full user data before completing login
+      await fetchUser() // preloader pause fix
+      return { success: true }
+    } catch (err) {
+      error.value = err.response?.data?.message || 'Login Failed'
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+  ```
+
 
 ## fetchUser()
 ### 1.0: standard api call = response.data.user
@@ -116,6 +177,65 @@ async function fetchUser() {
       console.error('Failed to fetch user', err)
       // If fetch fails, user is probably not authenticated
       logout()
+    }
+  }
+  ```
+
+  ## logout 
+  ### 1.0: without preloader consideration
+  ```javascript 
+    async function logout() {
+    loading.value = true
+
+    try {
+      // Call Laravel logout endpoint
+      await api.post('/auth/logout') // must match the api route
+    } catch (err) {
+      console.error('Logout request failed', err)
+    } finally {
+      // Clear state
+      ;((user.value = null),
+        (token.value = null),
+        (error.value = null),
+        localStorage.removeItem('auth_token'))
+      loading.value = false
+    }
+  }
+  ```
+
+  ## initialize 
+  ### 1.0: initial version 
+  ```javascript 
+    // Initialize auth state on app load
+  async function initialize() {
+    loading.value = true
+    try {
+      if (token.value) {
+        await Promise.all([
+          // run at the same time - code will wait until both are done before continuing.
+          fetchUser(),
+          delay(1000), // ensures minimum 1s preloader
+        ])
+      }
+    } finally {
+      loading.value = false
+    }
+  }
+  ```
+  ### 1.1: adjustment for the preloader but not enough  
+  ```javascript 
+   async function initialize() {
+    loading.value = true
+    try {
+      if (token.value) {
+        await Promise.all([
+          // run at the same time - code will wait until both are done before continuing.
+          fetchUser(),
+          delay(1000), // ensures minimum 1s preloader
+        ])
+      }
+    } finally {
+      loading.value = false
     }
   }
   ```

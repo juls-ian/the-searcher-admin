@@ -37,3 +37,23 @@ const loginSchema = computed(() => {
   })
 })
 ```
+
+## handleLogin 
+### 1.0: with preloader issue
+```javascript 
+const handleLogin = async () => {
+  try {
+    const result = await authStore.login(form.value)
+
+    if (result.success) {
+      // fetch full user data before navigation
+      await authStore.fetchUser()
+
+      router.push({ name: 'home' }) // redirect to home if login successful
+    }
+  } catch (error) {
+    // Error already stored in authStore.error
+    console.error('Login Failed', error)
+  }
+}
+```

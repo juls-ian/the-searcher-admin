@@ -6,6 +6,7 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import * as yup from 'yup'
 import YupPassword from 'yup-password'
+import Preloader from '@/components/ui/Preloader.vue'
 YupPassword(yup)
 
 const router = useRouter()
@@ -69,7 +70,7 @@ const handleLogin = async () => {
 
 <template>
   <AuthLayout>
-    <header></header>
+    <Preloader v-if="authStore.loading" />
     <div class="login">
       <main class="login__card">
         <div class="login__card-left">

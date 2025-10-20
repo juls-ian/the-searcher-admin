@@ -73,6 +73,8 @@ The app will consist of these components:
 
 These three will be component foundation and shall be developed first, Navbar -> Toolbar -> Main Layout
 
+#### Preloader 
+
   
 
 
