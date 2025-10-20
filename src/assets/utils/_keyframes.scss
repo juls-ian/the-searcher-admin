@@ -1,0 +1,32 @@
+// For the nav
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/** Keyframes to control when 'display' changes - toolbar */
+@keyframes hideElement {
+  to {
+    display: none;
+  }
+}
+
+@keyframes showElement {
+  to {
+    display: flex;
+  }
+}
+
+// Main layout
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

@@ -327,18 +327,5 @@ onUnmounted(() => {
       animation-delay: 0s;
     }
   }
-
-  /** Keyframes to control when 'display' changes */
-  @keyframes hideElement {
-    to {
-      display: none;
-    }
-  }
-
-  @keyframes showElement {
-    to {
-      display: flex;
-    }
-  }
 }
 </style>

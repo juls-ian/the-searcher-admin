@@ -69,12 +69,13 @@ Separate two folders for the resources:
 
 The app will consist of these components:
 
-#### Vertical Navbar 
+#### Navbar, Toolbar & Main Layout 
 
-This will be the main navigation bar
+These three will be component foundation and shall be developed first, Navbar -> Toolbar -> Main Layout
+
   
 
-#### Horizontal Navbar 
+
 
 
 
