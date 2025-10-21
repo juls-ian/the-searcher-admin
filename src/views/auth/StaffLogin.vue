@@ -83,7 +83,7 @@ const handleLogin = async () => {
         </div>
         <div class="login__card-right">
           <Form @submit="handleLogin" class="login__form form" :validation-schema="loginSchema">
-            <div class="login__row row">
+            <div class="login__row form__row">
               <div class="login__field-group form__field-group">
                 <Field
                   name="email-or-staff-id"
@@ -93,6 +93,7 @@ const handleLogin = async () => {
                 >
                   <input
                     type="text"
+                    class="form__input"
                     v-model="form.emailOrId"
                     v-bind="field"
                     placeholder="Email or staff id"
@@ -117,7 +118,13 @@ const handleLogin = async () => {
                   :validate-on-blur="true"
                   :validate-on-input="false"
                 >
-                  <input type="password" v-bind="field" placeholder="Password" required />
+                  <input
+                    type="password"
+                    class="form__input"
+                    v-bind="field"
+                    placeholder="Password"
+                    required
+                  />
                   <div class="login__alert form__input-alert" v-if="errors.length !== 0">
                     <p>
                       {{ errorMessage || '&nbsp;' }}
