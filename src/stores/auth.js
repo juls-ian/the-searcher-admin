@@ -76,22 +76,10 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  function delay(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms))
-  }
   // Initialize auth state on app load
   async function initialize() {
-    loading.value = true
-    try {
-      if (token.value) {
-        await Promise.all([
-          // run at the same time - code will wait until both are done before continuing.
-          fetchUser(),
-          delay(1000), // ensures minimum 1s preloader
-        ])
-      }
-    } finally {
-      loading.value = false
+    if (token.value) {
+      await fetchUser()
     }
   }
 

@@ -52,6 +52,8 @@ const form = ref({
 })
 
 const handleLogin = async () => {
+  // set loading = true at the very start
+  authStore.loading = true
   try {
     const result = await authStore.login(form.value)
 
@@ -64,6 +66,9 @@ const handleLogin = async () => {
   } catch (error) {
     // Error already stored in authStore.error
     console.error('Login Failed', error)
+  } finally {
+    // turn off loading only after all is done
+    authStore.loading = false
   }
 }
 </script>

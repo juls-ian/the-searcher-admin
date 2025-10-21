@@ -181,7 +181,7 @@ async function fetchUser() {
   }
   ```
 
-  ## logout 
+  ## logout()
   ### 1.0: without preloader consideration
   ```javascript 
     async function logout() {
@@ -203,22 +203,13 @@ async function fetchUser() {
   }
   ```
 
-  ## initialize 
+  ## initialize() & delay() 
   ### 1.0: initial version 
   ```javascript 
     // Initialize auth state on app load
-  async function initialize() {
-    loading.value = true
-    try {
-      if (token.value) {
-        await Promise.all([
-          // run at the same time - code will wait until both are done before continuing.
-          fetchUser(),
-          delay(1000), // ensures minimum 1s preloader
-        ])
-      }
-    } finally {
-      loading.value = false
+    async function initialize() {
+    if (token.value) {
+      await fetchUser()
     }
   }
   ```
@@ -237,5 +228,11 @@ async function fetchUser() {
     } finally {
       loading.value = false
     }
+  }
+  ```
+  #### delay(): paired with 1.1
+  ```javascript 
+    function delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms))
   }
   ```
