@@ -31,9 +31,9 @@ api.interceptors.request.use(
  * Response interceptor 1: to unwrap data
  */
 api.interceptors.response.use(
-  // Use a property that makes sense, like 'payload' or 'result'
+  // Use a property that makes sense, like 'payload' or 'result' for custom name
   (response) => ({
-    payload: response.data.data,
+    data: response.data.data, // to prevent data.data chaining
     success: response.data.success,
     message: response.data.message,
   }),

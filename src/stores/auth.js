@@ -29,13 +29,13 @@ export const useAuthStore = defineStore('auth', () => {
         password: credentials.password,
       })
 
-      console.log('Full response:', response)
-      console.log('Token:', response.payload.token)
-      console.log('User:', response.payload.user)
+      // console.log('Full response:', response)
+      // console.log('Token:', response.data.token)
+      // console.log('User:', response.data.user)
 
       // Since interceptor unwraps, response is already the data object
-      token.value = response.payload.token // payload = interceptor in api.js
-      user.value = response.payload.user
+      token.value = response.data.token // data = interceptor in api.js
+      user.value = response.data.user
       localStorage.setItem('auth_token', token.value)
 
       return { success: true }
@@ -68,7 +68,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     try {
       const response = await api.get('/auth/current-user') // must match the api route
-      user.value = response.payload.user // changed from response.data due to interceptor
+      user.value = response.data.user // changed from response.data due to interceptor
     } catch (err) {
       console.error('Failed to fetch user', err)
       // If fetch fails, user is probably not authenticated

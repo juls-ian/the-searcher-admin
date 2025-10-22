@@ -39,3 +39,30 @@ api.interceptors.response.use(
   (error) => Promise.reject(error)
 )
 ```
+### 1.3: chained 
+```javascript 
+  async function login(credentials) {
+    error.value = null
+
+    try {
+      // Login request - must match Laravel login route
+      const response = await api.post('/auth/login', {
+        emailOrId: credentials.emailOrId,
+        password: credentials.password,
+      })
+
+      console.log('Full response:', response)
+      console.log('Token:', response.payload.token)
+      console.log('User:', response.payload.user)
+
+      // Since interceptor unwraps, response is already the data object
+      token.value = response.payload.token // payload = interceptor in api.js
+      user.value = response.payload.user
+      localStorage.setItem('auth_token', token.value)
+
+      return { success: true }
+    } catch (err) {
+      error.value = err.response?.data?.message || 'Login Failed'
+      throw err
+    }
+  ```
