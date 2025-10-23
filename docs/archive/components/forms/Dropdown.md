@@ -1,59 +1,35 @@
+# Scrapped codes in Dropdown 
+
+## overall component 
+### 1.0: not generic or dynamic
+```javascript 
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useArticleCategoryStore } from '@/stores/articleCategory'
 
 // Props
 const props = defineProps({
-  // current value
   modelValue: {
     type: [Number, String, null],
     default: null,
-  },
-  // Key for display label
-  labelName: {
-    type: String,
-    default: 'name',
-  },
-  // Key for unique value or id
-  valueKey: {
-    type: String,
-    default: 'id',
-  },
-  parentKey: {
-    type: String,
-    default: 'parent_id', // if hierarchal
-  },
-  data: {
-    type: Array,
-    required: true, // array of objects (flat or nested)
-  },
-  placeholder: {
-    type: String,
-    default: 'Select option',
-  },
-  hierarchal: {
-    type: Boolean,
-    default: false, // if true show nested submenus
   },
 })
 
 // Emits
 const emit = defineEmits(['update:modelValue']) // update:modelValue → keeps form value in sync (two-way binding)
 
+const articleCategoryStore = useArticleCategoryStore()
+
 const isDropdownOpen = ref(false)
-const selectedItem = ref('') // category name shown
+const selectedCategoryPath = ref('') // category name shown
 const openSubmenuId = ref(null) // track which submenu is open
 
-// Get children for hierarchal dropdown
-const getChildren = (parentId) => {
-  return props.data.filter((child) => child[props.parentKey] === parentId)
-}
+onMounted(() => {
+  articleCategoryStore.fetchArticleCategories()
+})
 
 const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value
-  if (isDropdownOpen.value) {
-    openSubmenuId.value = null
-  }
 }
 
 const toggleSubmenu = (parentId, event) => {
@@ -61,9 +37,9 @@ const toggleSubmenu = (parentId, event) => {
   openSubmenuId.value = openSubmenuId.value === parentId ? null : parentId // open and closing submenu and updates the ref
 }
 
-const selectItem = (item, path) => {
-  emit('update:modelValue', item[props.valueKey]) // emits the id
-  selectedItem.value = path
+const selectCategory = (category, path) => {
+  emit('update:modelValue', category.id)
+  selectedCategoryPath.value = path
   isDropdownOpen.value = false
 }
 
@@ -71,76 +47,62 @@ const closeDropdown = () => {
   isDropdownOpen.value = false
 
   // Reset submenu when closing dd
-  if (!isDropdownOpen.value) {
-    openSubmenuId.value = null
-  }
+   if (!isDropdownOpen.value) {
+     openSubmenuId.value = null
+   }
+}
+
+// Helper to get subcategories for a parent
+const getSubcategoriesFor = (parentId) => {
+  return articleCategoryStore.getSubcategories.filter((sub) => sub.parent_id === parentId)
 }
 </script>
-
+```
+```html
 <template>
-  <!-- Click-away-to-close function-->
   <div v-if="isDropdownOpen" class="dropdown-overlay" @click="closeDropdown"></div>
-  <!-- Actual dropdown -->
   <div class="dropdown">
     <button type="button" class="dropdown__button" @click="toggleDropdown">
-      <span :class="{ placeholder: !selectedItem }">
-        {{ selectedItem || props.placeholder }}
+      <span :class="{ placeholder: !selectedCategoryPath }">
+        {{ selectedCategoryPath || 'Select Category' }}
       </span>
     </button>
 
     <!-- Parent category -->
     <ul v-if="isDropdownOpen" class="dropdown__menu">
-      <!-- For hierarchal dropdown -->
-      <template v-if="props.hierarchal">
-        <li
-          v-for="parent in data.filter((item) => !item[props.parentKey])"
-          :key="parent[props.valueKey]"
-          class="dropdown__menu-item has-submenu"
-          @click="toggleSubmenu(parent[props.valueKey], $event)"
-        >
-          {{ parent[props.labelName] }}
+      <li
+        v-for="parentCategory in articleCategoryStore.getParentCategories"
+        :key="parentCategory.id"
+        class="dropdown__menu-item has-submenu"
+        @click="toggleSubmenu(parentCategory.id, $event)"
+      >
+        {{ parentCategory.category_name }}
 
-          <!-- Subcategory -->
-          <ul
-            v-if="getChildren(parent[props.valueKey]).length"
-            class="dropdown__submenu"
-            :class="{ 'is-open': openSubmenuId === parent[props.valueKey] }"
+        <!-- Subcategory -->
+        <ul class="dropdown__submenu" :class="{ 'is-open': openSubmenuId === parentCategory.id }">
+          <li
+            v-for="subcategory in getSubcategoriesFor(parentCategory.id)"
+            :key="subcategory.id"
+            class="dropdown__submenu-item"
+            :value="subcategory.id"
+            @click.stop="
+              selectCategory(
+                subcategory,
+                `${parentCategory.category_name} > ${subcategory.category_name}`,
+              )
+            "
           >
-            <li
-              v-for="child in getChildren(parent[props.valueKey])"
-              :key="child[props.valueKey]"
-              class="dropdown__submenu-item"
-              :value="child[props.valueKey]"
-              @click.stop="
-                selectItem(
-                  child,
-                  `${parent[props.labelName]} > ${child[props.labelName]}`, // News > Campus
-                )
-              "
-            >
-              {{ child[labelName] }}
-            </li>
-          </ul>
-        </li>
-      </template>
-
-      <!-- For flat dropdown -->
-      <template v-else>
-        <li
-          v-for="item in props.data"
-          :key="item[props.valueKey]"
-          class="dropdown__menu-item"
-          @click="selectItem(item, item[props.labelName])"
-        >
-          {{ item[props.labelName] }}
-        </li>
-      </template>
+            {{ subcategory.category_name }}
+          </li>
+        </ul>
+      </li>
     </ul>
     <!-- <input type="hidden" :value="props.modelValue" /> -->
     <!-- <input type="hidden" :value="selectedCategory" /> -->
   </div>
 </template>
-
+```
+```scss
 <style lang="scss" scoped>
 @use '@/assets/utils' as *;
 @use '@/assets/layouts' as *;
@@ -303,3 +265,4 @@ const closeDropdown = () => {
   // }
 }
 </style>
+```
