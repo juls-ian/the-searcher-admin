@@ -2,9 +2,14 @@
 import { onMounted, ref } from 'vue'
 import { useArticleCategoryStore } from '@/stores/articleCategory'
 
-// Props
+/**
+ * how it will receive and send data for v-model
+ * props & emits
+ */
+
+// Props: data from parent -> child (receive and )
 const props = defineProps({
-  // current value
+  // current value: incoming data from parent (v-model)
   modelValue: {
     type: [Number, String, null],
     default: null,
@@ -37,7 +42,7 @@ const props = defineProps({
   },
 })
 
-// Emits
+// Emits: data from child -> parent
 const emit = defineEmits(['update:modelValue']) // update:modelValue → keeps form value in sync (two-way binding)
 
 const isDropdownOpen = ref(false)
@@ -62,7 +67,7 @@ const toggleSubmenu = (parentId, event) => {
 }
 
 const selectItem = (item, path) => {
-  emit('update:modelValue', item[props.valueKey]) // emits the id
+  emit('update:modelValue', item[props.valueKey]) // emits the id so parent can get it
   selectedItem.value = path
   isDropdownOpen.value = false
 }
@@ -83,7 +88,7 @@ const closeDropdown = () => {
   <!-- Actual dropdown -->
   <div class="dropdown">
     <button type="button" class="dropdown__button" @click="toggleDropdown">
-      <span :class="{ placeholder: !selectedItem }">
+      <span class="dropdown__button-label" :class="{ placeholder: !selectedItem }">
         {{ selectedItem || props.placeholder }}
       </span>
     </button>
@@ -172,8 +177,8 @@ const closeDropdown = () => {
 
   &__button {
     padding: 12px 20px;
-    background: $surface-light;
-    border: 1px solid $surface-light;
+    // background: $surface-fields;
+    background: $surface-fields;
     cursor: pointer;
     width: 100%;
     text-align: left;
@@ -183,14 +188,24 @@ const closeDropdown = () => {
     font-family: inherit;
     font-size: inherit;
 
-    span {
+    &-label {
       color: $text-dark-main;
+      font-size: $font-size-sm;
+      font-family: $pop;
+    }
+
+    &:focus {
+      outline: 0.1rem solid $primary-muted;
     }
 
     &:hover {
-      background: $primary-base;
+      background: $primary-muted;
 
       span {
+        color: $text-light-main;
+      }
+
+      &::after {
         color: $text-light-main;
       }
     }
@@ -198,7 +213,7 @@ const closeDropdown = () => {
     &::after {
       content: '▼';
       font-size: 10px;
-      color: #666;
+      color: $text-dark-main;
     }
 
     .placeholder {
@@ -216,7 +231,7 @@ const closeDropdown = () => {
     left: 0;
     margin: spacing(1) 0 0 0;
     padding: 0;
-    background: $surface-light;
+    background: $surface-fields !important;
     border: 1px solid #ddd;
     border-radius: 4px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -234,15 +249,22 @@ const closeDropdown = () => {
       justify-content: flex-start;
       align-items: center;
       gap: 0.5em;
-      color: $text-dark-main;
       list-style: none;
+      color: $text-dark-main;
+      font-size: $font-size-sm;
+      font-family: $pop;
 
       &:last-child {
         border-bottom: none;
       }
 
       &:hover {
-        background: #f5f5f5;
+        background: $primary-muted;
+        color: $text-light-main;
+
+        &.has-submenu::after {
+          color: $text-light-main;
+        }
       }
 
       &-icon {
