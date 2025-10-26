@@ -149,6 +149,7 @@ const closeDropdown = () => {
 <style lang="scss" scoped>
 @use '@/assets/utils' as *;
 @use '@/assets/layouts' as *;
+@use 'sass:color';
 
 .dropdown-overlay {
   position: fixed;
@@ -289,7 +290,8 @@ const closeDropdown = () => {
     left: spacing(20);
     margin-top: spacing(6);
     padding: 0;
-    background: darken($surface-light, 3%);
+    // background: darken($surface-light, 3%);
+    background: color.adjust($surface-light, $lightness: -3%);
     border: 1px solid $surface-light;
     border-radius: 4px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);

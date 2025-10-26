@@ -272,9 +272,6 @@ const handleLogin = async () => {
         }
       }
     }
-
-    &-right {
-    }
   }
 
   &__field-group {
@@ -296,6 +293,10 @@ const handleLogin = async () => {
     color: $primary-muted;
     font-size: $font-size-xs;
     font-family: $pop;
+  }
+
+  &__alert {
+    margin-top: spacing(5);
   }
 }
 </style>
