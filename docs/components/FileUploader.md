@@ -1,4 +1,6 @@
-<script setup>
+# Guide on the code 
+
+```javascript 
 import { ref } from 'vue'
 
 // Props: data from parent -> child (receive and )
@@ -28,17 +30,25 @@ const fileInput = ref(null)
 // Accepted file type mapping: MIME type filters
 const acceptMap = {
   image: '.jpg,.jpeg,.png,.webp',
-  // image: 'image/*',
   video: 'video/*',
   pdf: 'application/pdf',
 }
 
 /**
- * Handler 1: upload by clicking input
+ *  Handler 1: upload by clicking input
  * @change="handleFileChange"
+ * {
+  target: {
+    files: [File]
+  }
+  }
  */
 const handleFileChange = (e) => {
-  const selected = e.target.files[0] // take first file
+  /**
+   * e.target = input element
+   * [0] is the first file if input doesn't allow multiple file
+   */
+  const selected = e.target.files[0]
 
   if (!selected) return
 
@@ -55,7 +65,6 @@ const handleFileChange = (e) => {
   isUploading.value = true
   uploadProgress.value = 0
 
-  // Progress bar simulation
   const interval = setInterval(() => {
     uploadProgress.value += 10
 
@@ -76,6 +85,11 @@ const handleFileChange = (e) => {
 /**
  * Handler 2: upload by dragging
  * @drop: Handles the file once the user drops it on the uploader
+ * {
+  dataTransfer: {
+    files: [File]
+  }
+}
  */
 const handleDroppedFile = (e) => {
   e.preventDefault()
@@ -89,7 +103,7 @@ const handleDroppedFile = (e) => {
 }
 
 /**
- * Handler 3:
+ * Handler 3: 
  * @dragleave: Detect when the dragged file leaves the drop zone area
  * preventing browser's default behavior
  */
@@ -99,7 +113,7 @@ const handleDragLeave = (e) => {
 }
 
 /**
- * Handler 4: Allow the file to be dragged over the uploader area
+ * Handler 4: Allow the file to be dragged over the uploader area 
  * without browser opening it
  */
 const handleDragOver = (e) => {
@@ -129,9 +143,8 @@ const formatFileSize = (bytes) => {
   const i = Math.floor(Math.log(bytes) / Math.log(k))
   return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i]
 }
-</script>
-
-<template>
+```
+```html
   <div class="uploader">
     <!-- UPLOADER -->
     <!-- Vue creates a reference named fileInput -->
@@ -159,7 +172,7 @@ const formatFileSize = (bytes) => {
           class="uploader__area-photo"
           alt="upload file illustration"
         />
-        <p class="uploader__area-title">Drop your file here</p>
+        <p class="uploader__area-title">Drop your files here</p>
         <p class="uploader__area-or">or</p>
         <button type="button" class="uploader__area-button">Browse</button>
         <p class="uploader__area-info">File must be in jpg, webp, or png and not exceed 5mb</p>
@@ -226,9 +239,9 @@ const formatFileSize = (bytes) => {
       </button>
     </div>
   </div>
-</template>
+```
 
-<style lang="scss" scoped>
+```scss
 @use '@/assets/utils' as *;
 
 .uploader {
@@ -426,4 +439,4 @@ const formatFileSize = (bytes) => {
     }
   }
 }
-</style>
+```

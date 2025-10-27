@@ -2,7 +2,6 @@
 
 ## initial version 
 ```javascript
-<script setup>
 import { ref } from 'vue'
 
 // Props: data from parent -> child (receive and )
@@ -48,10 +47,8 @@ const handleFileChange = (e) => {
     previewUrl.value = null
   }
 }
-</script>
 ```
 ```html
-<template>
   <div class="uploader">
     <!-- UPLOADER -->
     <!-- Vue creates a reference named fileInput -->
@@ -85,10 +82,8 @@ const handleFileChange = (e) => {
       </p>
     </div>
   </div>
-</template>
 ```
 ```scss
-<style lang="scss" scoped>
 .uploader {
   &__area {
     border: 2px solid black;
@@ -105,5 +100,4 @@ const handleFileChange = (e) => {
     margin-top: 4;
   }
 }
-</style>
 ```
