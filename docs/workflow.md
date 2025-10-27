@@ -49,31 +49,46 @@ Separate two folders for the resources:
 
 5. Begin developing the layouts needed
 
-### Auth: Login
 
-1. create the login page 
-   
-2. configure in the laravel api:
+
+
+## Auth: Login
+
+1. configure in the laravel api:
    - create **.env.development** and **.env.production** in the laravel api 
    - configure **.env** of the laravel api
    - since we're using token auth we need to CSRF-exempt the all API routes in the **app.php** 
    - configure the **cors.php**'s allowed_origins
 
-3. create src/service/api.js with interceptors and connect it to the api
+2. create src/service/api.js with interceptors and connect it to the api
 
-4. define a store with actions: login & logout && getters: fetchUser
+3. develop the **auth store** with actions: login & logout & getters: fetchUser
 
-5. add route guards and handle login 
+4. add route guards and handle login 
+   
+5. create the login page 
+   
 
-### Components 
+## Core Components 
 
 The app will consist of these components:
 
-#### Navbar, Toolbar & Main Layout 
+1. Navbar 
+2. Toolbar 
+3. Main Layout 
 
 These three will be component foundation and shall be developed first, Navbar -> Toolbar -> Main Layout
 
-#### Preloader 
+## Form Components 
+
+The form which is an essential part of the admin side shall have these components:
+
+1. Dropdown 
+2. Checkbox 
+3. FileUploader 
+4. MultiFileUploader
+
+####
 
   
 
