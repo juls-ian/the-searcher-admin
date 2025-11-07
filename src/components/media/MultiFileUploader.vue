@@ -10,7 +10,7 @@ const props = defineProps({
   },
   // current value: incoming data from parent (v-model)
   modelValue: {
-    type: [File, null],
+    type: [Array, null],
     default: () => [],
   },
 })
@@ -167,7 +167,7 @@ const formatFileSize = (bytes) => {
     </div>
 
     <!-- PREVIEW -->
-    <div v-for="(file, index) in files" class="uploader__file">
+    <div v-for="(file, index) in files" :key="index" class="uploader__file">
       <div class="uploader__file-icon">
         <!-- Uploaded file preview -->
         <template v-if="previews[index]">

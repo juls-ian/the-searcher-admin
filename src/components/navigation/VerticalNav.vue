@@ -244,7 +244,7 @@ const handleDropdownItemClicked = () => {
 
       <!-- Newsletter -->
       <div class="navbar__item navbar__newsletter">
-        <RouterLink class="navbar__router">
+        <RouterLink class="navbar__router" :to="{ name: 'newsletter' }">
           <HugeiconsIcon :icon="Mailbox01Icon" :size="30" />
           <p v-show="isExpanded">Newsletter</p>
         </RouterLink>

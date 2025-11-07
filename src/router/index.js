@@ -33,6 +33,11 @@ const router = createRouter({
       component: () => import('../views/admin/StaffCalendar.vue'),
     },
     {
+      path: '/newsletter',
+      name: 'newsletter',
+      component: () => import('../views/admin/Newsletter.vue'),
+    },
+    {
       path: '/:notFound(.*)*',
     },
     {

@@ -137,7 +137,7 @@ const formatFileSize = (bytes) => {
     <!-- Vue creates a reference named fileInput -->
     <input
       type="file"
-      :accept="acceptMap[key]"
+      :accept="acceptMap[fileType]"
       @change="handleFileChange"
       class="uploader__input"
       ref="fileInput"
