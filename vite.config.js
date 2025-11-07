@@ -15,4 +15,11 @@ export default defineConfig({
       '@images': fileURLToPath(new URL('./src/assets/images', import.meta.url)),
     },
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern-compiler',
+      },
+    },
+  },
 })
