@@ -14,12 +14,12 @@ const props = defineProps({
     type: [Number, String, null],
     default: null,
   },
-  // Key for display label
+  // Key for display label (field name from resource or table)
   labelName: {
     type: String,
     default: 'name',
   },
-  // Key for unique value or id
+  // Key for unique value or id (field name from resource or table)
   valueKey: {
     type: String,
     default: 'id',
@@ -40,6 +40,14 @@ const props = defineProps({
     type: Boolean,
     default: false, // if true show nested submenus
   },
+  multiSelect: {
+    type: Boolean,
+    default: false,
+  },
+  showCheckbox: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 // Emits: data from child -> parent
@@ -48,6 +56,7 @@ const emit = defineEmits(['update:modelValue']) // update:modelValue → keeps f
 const isDropdownOpen = ref(false)
 const selectedItem = ref('') // category name shown
 const openSubmenuId = ref(null) // track which submenu is open
+const selectedItems = ref([null]) // for multiselect
 
 // Get children for hierarchal dropdown
 const getChildren = (parentId) => {
@@ -64,6 +73,37 @@ const toggleDropdown = () => {
 const toggleSubmenu = (parentId, event) => {
   event.stopPropagation() // prevent closing main dropdown
   openSubmenuId.value = openSubmenuId.value === parentId ? null : parentId // open and closing submenu and updates the ref
+}
+
+// For single select with checkbox
+const isSelected = (item) => {
+  if (props.multiSelect) {
+    return selectedItem.value.includes(item[props.valueKey])
+  }
+
+  return props.modelValue === item[props.valueKey]
+}
+
+const handleSelect = (item) => {
+  if (props.multiSelect) {
+    toggleItem(item)
+  } else {
+    selectItem(item, item[props.labelName])
+  }
+}
+
+// For the multi-select checkbox
+const toggleItem = (item) => {
+  const value = item[props.valueKey]
+  const index = selectedItems.value.indexOf(value)
+
+  if (index > -1) {
+    selectedItems.value.splice(index, 1)
+  } else {
+    selectedItems.value.push(value)
+  }
+
+  emit('update:modelValue', selectedItems.value)
 }
 
 const selectItem = (item, path) => {
@@ -135,8 +175,14 @@ const closeDropdown = () => {
           v-for="item in props.data"
           :key="item[props.valueKey]"
           class="dropdown__menu-item"
-          @click="selectItem(item, item[props.labelName])"
+          @click="handleSelect(item)"
         >
+          <input
+            v-if="showCheckbox"
+            type="checkbox"
+            :checked="isSelected(item)"
+            class="dropdown__checkbox"
+          />
           {{ item[props.labelName] }}
         </li>
       </template>
@@ -320,6 +366,14 @@ const closeDropdown = () => {
         background: #e8f4f8;
       }
     }
+  }
+
+  &__checkbox {
+    margin-right: spacing(2);
+    cursor: pointer;
+    color: $text-dark-main;
+    font-size: $font-size-sm;
+    font-family: $pop;
   }
 
   // &__menu-item:hover > &__submenu {

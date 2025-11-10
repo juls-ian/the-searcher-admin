@@ -14,6 +14,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  label: {
+    type: String,
+    required: true,
+  },
 })
 
 // Emits: data from child -> parent
@@ -28,6 +32,7 @@ const isChecked = computed({
 <template>
   <div class="wrapper">
     <input type="checkbox" class="wrapper__input" v-model="isChecked" />
+    <label>{{ props.label }}</label>
   </div>
 </template>
 
@@ -36,10 +41,12 @@ const isChecked = computed({
 
 /* Wrapper */
 .wrapper {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
+  gap: spacing(1);
 
+  /* Focus handling */
   &:focus:not(.focus-visible) {
     outline: 0;
   }
@@ -105,6 +112,19 @@ const isChecked = computed({
     }
   }
 
-  /* Focus handling */
+  label {
+    color: $text-dark-main;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: $font-size-sm;
+    font-family: $pop;
+    gap: spacing(1);
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  }
 }
 </style>
