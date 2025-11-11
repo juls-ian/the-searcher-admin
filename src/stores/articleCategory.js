@@ -14,14 +14,14 @@ export const useArticleCategoryStore = defineStore('articleCategory', () => {
   const getParentCategories = computed(
     () => categories.value.filter((category) => category.parent_id === null), // category = iterations
   )
-  // Get all sub
+  // // Get all sub
   const getSubcategories = computed(() =>
     categories.value.filter((category) => category.parent_id !== null),
   )
   // Returns subcategories of the currently selected parent.
-  // const getSubcategories = computed(() =>
-  //   categories.value.filter((sub) => sub.parent_id === parent.value?.id),
-  // )
+  const getSubCurrentParent = computed(() =>
+    categories.value.filter((sub) => sub.parent_id === parent.value?.id),
+  )
 
   // Actions
   async function fetchArticleCategories() {
@@ -30,7 +30,6 @@ export const useArticleCategoryStore = defineStore('articleCategory', () => {
     try {
       const response = await api.get('/article-categories')
       categories.value = response.data || []
-      console.log('Categories', response)
       return { success: true }
     } catch (err) {
       error.value = err.response?.data?.message || 'Cannot retrieved article categories'
@@ -47,6 +46,7 @@ export const useArticleCategoryStore = defineStore('articleCategory', () => {
     getArticleCategories,
     getParentCategories,
     getSubcategories,
+    getSubCurrentParent,
     // Actions
     fetchArticleCategories,
   }

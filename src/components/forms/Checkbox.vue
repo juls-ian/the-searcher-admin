@@ -32,7 +32,7 @@ const isChecked = computed({
 <template>
   <div class="wrapper">
     <input type="checkbox" class="wrapper__input" v-model="isChecked" />
-    <label>{{ props.label }}</label>
+    <p>{{ props.label }}</p>
   </div>
 </template>
 
@@ -112,13 +112,12 @@ const isChecked = computed({
     }
   }
 
-  label {
+  p {
     color: $text-dark-main;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: $font-size-sm;
-    font-family: $pop;
     gap: spacing(1);
     cursor: pointer;
     user-select: none;
