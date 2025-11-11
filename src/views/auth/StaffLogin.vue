@@ -177,7 +177,7 @@ const handleLogin = async () => {
     justify-content: center;
     background-color: $surface-light;
     flex-direction: column;
-    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    @include box-shadow-card;
     overflow: hidden; // prevent children from overflowing
 
     @include respond-to-mf(sm) {
