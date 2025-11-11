@@ -9,6 +9,7 @@
   &__row {
     display: flex;
     flex-direction: column;
+    gap: spacing(2);
 
     // Inline modifier
     &--inline {
@@ -20,32 +21,50 @@
 
   &__field-group {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     position: relative;
+    align-items: start;
   }
 
   &__input {
-    //   border: 0.1px solid $surface-dark;
+    // border: 0.1px solid $surface-dark;
     width: 100%;
     height: 4rem;
     padding: 1.6rem 1rem;
-    outline: 0.1rem solid $primary-muted;
+    // outline: 0.1rem solid $primary-muted;
     font-size: $font-size-base;
     font-family: $pop;
     border-radius: 0.4rem;
     color: $text-dark-main;
     transition: color 0.3s ease;
-    background: transparent !important;
+    background: $surface-fields !important;
 
     &:focus {
       outline: 0.1rem solid $primary-accent;
     }
   }
 
+  &__label {
+    color: $text-dark-main;
+    font-weight: 500;
+  }
+
+  &__checkbox {
+  }
+
+  &__btn-group {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    gap: spacing(3);
+  }
+
   &__input-alert {
     min-height: 0.6rem;
     position: absolute;
-    padding-top: spacing(10);
+    padding-top: spacing(5);
     pointer-events: none; // fields cannot be clicked after errorMessage appear fix
 
     p {

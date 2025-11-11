@@ -39,6 +39,7 @@ h6 {
 
 p {
   font-size: $font-size-base; // 16px
+  font-family: $pop;
 }
 
 a {
@@ -50,6 +51,12 @@ strong {
   font-weight: bold;
 }
 
+span {
+  font-family: $rob-flex;
+  font-size: $font-size-sm;
+}
+
 label {
+  font-family: $rob-flex;
   font-size: $font-size-sm;
 }
