@@ -151,7 +151,23 @@ onMounted(() => {
 ```
 
 ## add to ticker checkbox 
-### 1.0: using veevalidate event handlers 
+### 1.0: initial 
+```vue 
+<Field
+  name="add-to-ticker"
+  v-model="addToTicker"
+  type="checkbox"
+  :value="true"
+  :unchecked-value="false"
+  class="form__checkbox"
+>
+   <label class="form__label">
+   <input type="checkbox" :value="true" class="form__checkbox" />
+  <Checkbox v-model="addToTicker" class="form__checkbox" label="Add to ticker" />
+   </label>
+</Field>
+```
+### 1.1: using veevalidate event handlers 
 ```vue 
 <div class="publisher__field-group form__field-group">
   <Field
@@ -174,6 +190,7 @@ onMounted(() => {
 </div>
 ```
 
+
 ## getSubcategoriesFor()
 ### 1.0: helper to get subcategories for parent
 ```javascript
@@ -182,3 +199,4 @@ const getSubcategoriesFor = (parentId) => {
   return articleCategoryStore.getSubcategories.filter((sub) => sub.parent_id === parentId)
 }
 ```
+

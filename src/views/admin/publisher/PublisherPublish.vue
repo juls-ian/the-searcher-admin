@@ -57,15 +57,13 @@ console.log('positions:', userStore.getStaffByPositionCategory)
                   :unchecked-value="false"
                   class="form__checkbox"
                 >
-                  <!-- <label class="form__label"> -->
-                  <!-- <input type="checkbox" :value="true" class="form__checkbox" /> -->
                   <Checkbox v-model="addToTicker" class="form__checkbox" label="Add to ticker" />
-                  <!-- </label> -->
                 </Field>
               </div>
 
               <!-- Article Category dropdown  -->
               <div class="publisher__field-group form__field-group">
+                <label class="form__label">Category</label>
                 <Field name="category">
                   <Dropdown
                     v-model="selectedCategory"
@@ -81,6 +79,7 @@ console.log('positions:', userStore.getStaffByPositionCategory)
 
               <!-- Writer selector  -->
               <div class="publisher__field-group form__field-group">
+                <label class="form__label">Writer</label>
                 <Field name="writer">
                   <Dropdown
                     v-model="selectedWriter"
@@ -95,16 +94,20 @@ console.log('positions:', userStore.getStaffByPositionCategory)
 
               <!-- Date picker -->
               <div class="publisher__field-group form__field-group">
+                <label class="form__label">Date</label>
+
                 <Field name="date"> </Field>
               </div>
 
               <!-- Body textarea -->
               <div class="publisher__field-group form__field-group">
+                <label class="form__label">Body</label>
                 <Field name="body"> </Field>
               </div>
 
               <!-- Cover -->
               <div class="publisher__field-group form__field-group">
+                <label class="form__label">Cover</label>
                 <Field name="cover">
                   <FileUploader />
                 </Field>
@@ -112,7 +115,8 @@ console.log('positions:', userStore.getStaffByPositionCategory)
 
               <!-- Cover artist selector  -->
               <div class="publisher__field-group form__field-group">
-                <Field name="writer">
+                <label class="form__label">Cover artist</label>
+                <Field name="cover-artist">
                   <Dropdown
                     v-model="selectedWriter"
                     :data="userStore.getArtists"
@@ -126,16 +130,18 @@ console.log('positions:', userStore.getStaffByPositionCategory)
 
               <!-- Thumbnail -->
               <div v-if="!sameArtist" class="publisher__field-group form__field-group">
-                <Field name="cover">
+                <label class="form__label">Thumbnail</label>
+                <Field name="thumbnail">
                   <FileUploader />
                 </Field>
               </div>
 
               <!-- Thumbnail artist selector  -->
               <div v-if="!sameArtist" class="publisher__field-group form__field-group">
-                <Field name="writer">
+                <label class="form__label">Thumbnail artist</label>
+                <Field name="thumbnail-artist">
                   <Dropdown
-                    v-model="selectedWriter"
+                    v-model="selectedThumbnailArtist"
                     :data="userStore.getArtists"
                     label-name="full_name"
                     value-key="id"

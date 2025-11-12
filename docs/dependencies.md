@@ -97,7 +97,11 @@ npm i @tiptap/vue-3 @tiptap/pm @tiptap/starter-kit
 npm i dayjs
 ```
 ---
-#### TanStack Query Vue 
+#### TanStack Query Vue*
 ```bash 
 npm i @tanstack/vue-query
+```
+### Vue 3 Toastify 
+```bash 
+npm i vue3-toastify
 ```

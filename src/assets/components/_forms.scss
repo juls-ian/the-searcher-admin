@@ -47,6 +47,12 @@
   &__label {
     color: $text-dark-main;
     font-weight: 500;
+
+    &::after {
+      content: '*';
+      color: $primary-accent;
+      font-weight: 500;
+    }
   }
 
   &__checkbox {
