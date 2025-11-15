@@ -90,6 +90,7 @@ npm i @vueuse/core
 #### Tiptap
 ```bash 
 npm i @tiptap/vue-3 @tiptap/pm @tiptap/starter-kit
+npm i @tiptap/extension-text-style
 ```
 ---
 #### Day.js
