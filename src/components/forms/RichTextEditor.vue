@@ -1,10 +1,12 @@
 <script setup>
+import DragHandle from '@tiptap/extension-drag-handle-vue-3'
+import NodeRange from '@tiptap/extension-node-range'
 import { Color, TextStyle } from '@tiptap/extension-text-style'
 import StarterKit from '@tiptap/starter-kit'
 import { Editor, EditorContent, useEditor } from '@tiptap/vue-3'
 
-const emit = defineEmits(['update'])
-const props = defineProps(['content'])
+  const emit = defineEmits(['update'])
+  const props = defineProps(['content'])
 
 const editor = useEditor({
   content: "<p>I'm running Tiptap with Vue.js. 🎉</p>",
@@ -14,6 +16,11 @@ const editor = useEditor({
     Color.configure({
       types: ['textStyle'],
     }),
+    NodeRange.configure({
+      // allow to select only on depth 0
+      // depth: 0,
+      key: null,
+    }),
   ],
   onUpdate: () => {
     // every update is emitted
@@ -22,11 +29,19 @@ const editor = useEditor({
   },
 })
 
-const loadContent = () => {
-  if (props.content) {
-    editor.value.commands.setContent(props.content)
+  const loadContent = () => {
+    if (props.content) {
+      editor.value.commands.setContent(props.content)
+    }
   }
-}
+
+  // Watcher for the prop content
+  watch(
+    () => props.content,
+    () => {
+      loadContent()
+    }
+  )
 </script>
 
 <template>
@@ -263,118 +278,188 @@ const loadContent = () => {
         </div>
       </div>
     </div>
+
+    <DragHandle v-if="editor" :editor="editor">
+      <div class="custom-drag-handle" />
+    </DragHandle>
     <EditorContent :editor="editor" />
   </div>
 </template>
 
 <style lang="scss">
-@use '@/assets/utils' as *;
+  @use '@/assets/utils' as *;
 
-button.is-active {
-  background: $primary-base;
-  font-weight: bold;
-  color: $text-light-main;
-}
-
-.tiptap {
-  width: 100%;
-  min-width: 0; // allows flex item to shrink below content size
-  min-height: 20rem;
-  max-height: 50rem;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 1rem;
-  box-sizing: border-box;
-
-  background: $surface-fields !important;
-
-  p,
-  ul,
-  ol {
-    color: $text-dark-main;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
+  button.is-active {
+    background: $primary-base;
+    font-weight: bold;
+    color: $text-light-main;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    margin-top: 2.5rem;
-    text-wrap: pretty;
-    color: $text-dark-main;
-  }
-
-  pre {
-    background: $surface-dark;
-    border-radius: 0.5rem;
-    color: $surface-light;
-    font-family: 'JetBrainsMono', monospace;
-    margin: spacing(1.5) 0;
-    padding: spacing(1) spacing(2);
-
-    code {
-      background: none;
-      color: inherit;
-      font-size: $font-size-xs;
-      padding: 0;
-    }
-  }
-
-  blockquote {
-    border-left: 3px solid $primary-base;
-    margin: 1.5rem 0;
-    padding-left: 1rem;
-  }
-
-  hr {
-    border: none;
-    border-top: 1px solid $primary-base;
-    margin: 2rem 0;
-  }
-}
-
-.editor {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  min-width: 0; // Important: allows flex item to shrink below content size
-  overflow: hidden;
-
-  &__toolbar {
-    overflow-x: auto;
-    overflow-y: hidden;
-  }
-
-  &__button-group {
+  .tiptap {
     width: 100%;
-    display: flex;
-    align-items: center;
-    gap: spacing(2);
-    margin-bottom: spacing(4);
-    flex-wrap: wrap;
-  }
+    min-width: 0; // allows flex item to shrink below content size
+    min-height: 20rem;
+    max-height: 50rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 1rem;
+    box-sizing: border-box;
 
-  &__button-row {
-    display: flex;
-    align-items: center;
-    gap: spacing(1);
-    flex-wrap: wrap;
-  }
+    background: $surface-fields !important;
 
-  &__button {
-    padding: 0.4rem 1rem;
-    background: $surface-fields;
-    color: $text-dark-main;
-    border-radius: 0.7rem;
-    cursor: pointer;
+    p,
+    ul,
+    ol {
+      color: $text-dark-main;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
 
-    &:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      margin-top: 2.5rem;
+      text-wrap: pretty;
+      color: $text-dark-main;
+    }
+
+    pre {
+      background: $surface-dark;
+      border-radius: 0.5rem;
+      color: $surface-light;
+      font-family: 'JetBrainsMono', monospace;
+      margin: spacing(1.5) 0;
+      padding: spacing(1) spacing(2);
+
+      code {
+        background: none;
+        color: inherit;
+        font-size: $font-size-xs;
+        padding: 0;
+      }
+    }
+
+    blockquote {
+      border-left: 3px solid $primary-base;
+      margin: 1.5rem 0;
+      padding-left: 1rem;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid $primary-base;
+      margin: 2rem 0;
     }
   }
-}
+
+  .editor {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0; // Important: allows flex item to shrink below content size
+    overflow: hidden;
+
+    &__toolbar {
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+
+    &__button-group {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: spacing(2);
+      margin-bottom: spacing(4);
+      flex-wrap: wrap;
+    }
+
+    &__button-row {
+      display: flex;
+      align-items: center;
+      gap: spacing(1);
+      flex-wrap: wrap;
+    }
+
+    &__button {
+      padding: 0.4rem 1rem;
+      background: $surface-fields;
+      color: $text-dark-main;
+      border-radius: 0.7rem;
+      cursor: pointer;
+
+      &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  /* Drag Handle */
+  .ProseMirror {
+    padding: spacing(1) spacing(1) spacing(1) 0;
+
+    * {
+      margin-top: spacing(2);
+    }
+
+    > * {
+      margin-left: spacing(4);
+    }
+
+    .ProseMirror-widget * {
+      margin-top: auto;
+    }
+
+    ul,
+    ol {
+      padding: 0 spacing(2);
+    }
+  }
+
+  .ProseMirror-noderangeselection {
+    *::selection {
+      background: transparent;
+    }
+
+    * {
+      caret-color: transparent;
+    }
+  }
+
+  .ProseMirror-selectednode,
+  .ProseMirror-selectednoderange {
+    position: relative;
+
+    &::before {
+      position: absolute;
+      pointer-events: none;
+      z-index: -1;
+      content: '';
+      top: -0.25rem;
+      left: -0.25rem;
+      right: -0.25rem;
+      bottom: -0.25rem;
+      background-color: #70cff850;
+      border-radius: 0.2rem;
+    }
+  }
+
+  .custom-drag-handle {
+    &::after {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 1rem;
+      height: 1.25rem;
+      content: '⠿';
+      font-weight: 700;
+      cursor: grab;
+      background: #0d0d0d10;
+      color: #0d0d0d50;
+      border-radius: 0.25rem;
+    }
+  }
 </style>
