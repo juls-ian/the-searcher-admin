@@ -91,6 +91,7 @@ npm i @vueuse/core
 ```bash 
 npm i @tiptap/vue-3 @tiptap/pm @tiptap/starter-kit
 npm i @tiptap/extension-text-style
+npm i @tiptap/extension-drag-handle-vue-3 @tiptap/extension-drag-handle @tiptap/extension-node-range @tiptap/extension-collaboration @tiptap/y-tiptap yjs y-protocols
 ```
 ---
 #### Day.js
