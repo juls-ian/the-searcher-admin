@@ -4,6 +4,7 @@ import NodeRange from '@tiptap/extension-node-range'
 import { Color, TextStyle } from '@tiptap/extension-text-style'
 import StarterKit from '@tiptap/starter-kit'
 import { Editor, EditorContent, useEditor } from '@tiptap/vue-3'
+import { watch } from 'vue'
 
   const emit = defineEmits(['update'])
   const props = defineProps(['content'])
