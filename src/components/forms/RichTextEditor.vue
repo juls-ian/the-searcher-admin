@@ -6,8 +6,13 @@ import StarterKit from '@tiptap/starter-kit'
 import { Editor, EditorContent, useEditor } from '@tiptap/vue-3'
 import { watch } from 'vue'
 
-  const emit = defineEmits(['update'])
-  const props = defineProps(['content'])
+  const emit = defineEmits(['update:modelValue'])
+  const props = defineProps({
+    modelValue: {
+      type: String,
+      default: ''
+    }
+  })
 
 const editor = useEditor({
   content: "<p>I'm running Tiptap with Vue.js. 🎉</p>",
@@ -26,21 +31,18 @@ const editor = useEditor({
   onUpdate: () => {
     // every update is emitted
     // travels from here to the parent
-    emit('update', editor.value.getHTML)
+    emit('update:modelValue', editor.value.getHTML())
   },
 })
 
-  const loadContent = () => {
-    if (props.content) {
-      editor.value.commands.setContent(props.content)
-    }
-  }
-
-  // Watcher for the prop content
+  // Watcher for the modelValue external changes
   watch(
-    () => props.content,
-    () => {
-      loadContent()
+    () => props.modelValue,
+    (newValue) => {
+      if(editor.value && newValue !== editor.value.getHTML()) {
+        editor.value.commands.setContent(newValue)
+
+      }
     }
   )
 </script>
