@@ -1,34 +1,37 @@
 <script setup>
-import MainLayout from '@/layouts/MainLayout.vue'
-import { Form, Field } from 'vee-validate'
-import { useArticleStore } from '@/stores/article'
-import { useArticleCategoryStore } from '@/stores/articleCategory'
-import { useUserStore } from '@/stores/user'
+  import MainLayout from '@/layouts/MainLayout.vue'
+  import { Form, Field } from 'vee-validate'
+  import { useArticleStore } from '@/stores/article'
+  import { useArticleCategoryStore } from '@/stores/articleCategory'
+  import { useUserStore } from '@/stores/user'
 
-import Dropdown from '@/components/forms/Dropdown.vue'
-import { onMounted, ref } from 'vue'
-import Checkbox from '@/components/forms/Checkbox.vue'
-import FileUploader from '@/components/media/FileUploader.vue'
-import MultiFileUploader from '@/components/media/MultiFileUploader.vue'
+  import Dropdown from '@/components/forms/Dropdown.vue'
+  import { onMounted, ref } from 'vue'
+  import Checkbox from '@/components/forms/Checkbox.vue'
+  import FileUploader from '@/components/media/FileUploader.vue'
+  import MultiFileUploader from '@/components/media/MultiFileUploader.vue'
+  import RichTextEditor from '@/components/forms/RichTextEditor.vue'
 
-const articleStore = useArticleStore()
-const articleCategoryStore = useArticleCategoryStore()
-const userStore = useUserStore()
+  const articleStore = useArticleStore()
+  const articleCategoryStore = useArticleCategoryStore()
+  const userStore = useUserStore()
 
-const selectedCategory = ref(null) // the ids of currently selected
-const addToTicker = ref(false)
-const sameArtist = ref(false)
-const selectedWriter = ref(null)
-const selectedCoverArtist = ref(null)
-const selectedThumbnailArtist = ref(null)
+  const selectedCategory = ref(null) // the ids of currently selected
+  const tiptapEditor = ref('')
+  const sameArtist = ref(false)
 
-onMounted(() => {
-  articleStore.fetchArticles()
-  articleCategoryStore.fetchArticleCategories()
-  userStore.fetchUsers()
-})
+  const updateEditor = (value) => {
+    // Ref update
+    tiptapEditor.value = value
+  }
 
-console.log('positions:', userStore.getStaffByPositionCategory)
+  onMounted(() => {
+    articleStore.fetchArticles()
+    articleCategoryStore.fetchArticleCategories()
+    userStore.fetchUsers()
+  })
+
+  console.log('positions:', userStore.getStaffByPositionCategory)
 </script>
 
 <template>
@@ -40,10 +43,13 @@ console.log('positions:', userStore.getStaffByPositionCategory)
             <div class="publisher__row form__row">
               <div class="publisher__field-group form__field-group">
                 <!-- Title field  -->
-
                 <label class="form__label" for="title">Title</label>
-                <Field name="title">
+                <Field name="title" v-slot="{ field, errors, errorMessage }">
                   <input type="text" id="title" placeholder="Add title" class="form__input" />
+
+                  <div class="form__input-alert" v-bind="field" v-if="errors.length !== 0">
+                    {{ errorMessage }}
+                  </div>
                 </Field>
               </div>
 
@@ -51,21 +57,33 @@ console.log('positions:', userStore.getStaffByPositionCategory)
               <div class="publisher__field-group form__field-group">
                 <Field
                   name="add-to-ticker"
-                  v-model="addToTicker"
+                  v-slot="{ field, value }"
                   type="checkbox"
                   :value="true"
                   :unchecked-value="false"
                   class="form__checkbox"
                 >
-                  <Checkbox v-model="addToTicker" class="form__checkbox" label="Add to ticker" />
+                  <Checkbox
+                    :model-value="value"
+                    @update:model-value="field.onChange"
+                    class="form__checkbox"
+                    label="Add to ticker"
+                  />
+
+                  <div class="form__input-alert" v-if="errors.length !== 0">
+                    {{ errorMessage }}
+                  </div>
                 </Field>
               </div>
 
               <!-- Article Category dropdown  -->
               <div class="publisher__field-group form__field-group">
                 <label class="form__label">Category</label>
-                <Field name="category">
+                <Field name="category" v-slot="{ field, errors, errorMessage }">
                   <Dropdown
+                    :model-value="field"
+                    @update:model-value="field.onChange"
+                    @blur="field.onBlur"
                     v-model="selectedCategory"
                     :data="articleCategoryStore.categories"
                     label-name="category_name"
@@ -74,21 +92,29 @@ console.log('positions:', userStore.getStaffByPositionCategory)
                     placeholder="Select category"
                     hierarchal
                   />
+                  <div class="form__input-alert" v-if="errors.length !== 0">
+                    {{ errorMessage }}
+                  </div>
                 </Field>
               </div>
 
               <!-- Writer selector  -->
               <div class="publisher__field-group form__field-group">
                 <label class="form__label">Writer</label>
-                <Field name="writer">
+                <Field name="writer" v-slot="{ field, errors, errorMessage }">
                   <Dropdown
-                    v-model="selectedWriter"
+                    :model-value="field"
+                    @update:model-value="field.onChange"
+                    @blur="field.onBlur"
                     :data="userStore.getWriters"
                     label-name="full_name"
                     value-key="id"
                     :show-checkbox="true"
                     placeholder="Select writer"
                   />
+                  <div class="form__input-alert" v-if="errors.length !== 0">
+                    {{ errorMessage }}
+                  </div>
                 </Field>
               </div>
 
@@ -101,8 +127,14 @@ console.log('positions:', userStore.getStaffByPositionCategory)
 
               <!-- Body textarea -->
               <div class="publisher__field-group form__field-group">
-                <label class="form__label">Body</label>
-                <Field name="body"> </Field>
+                <label class="form__label" for="tiptapEditor">Body</label>
+                <Field name="body" v-slot="{ field, errors, errorMessage }">
+                  <RichTextEditor :model-value="field.value" @update:model-value="field.onChange" />
+
+                  <div class="form__input-alert" v-if="errors.length !== 0">
+                    {{ errorMessage }}
+                  </div>
+                </Field>
               </div>
 
               <!-- Cover -->
@@ -116,15 +148,20 @@ console.log('positions:', userStore.getStaffByPositionCategory)
               <!-- Cover artist selector  -->
               <div class="publisher__field-group form__field-group">
                 <label class="form__label">Cover artist</label>
-                <Field name="cover-artist">
+                <Field name="cover-artist" v-slot="{ field, errors, errorMessage }">
                   <Dropdown
-                    v-model="selectedWriter"
+                    :model-value="field"
+                    @update:model-value="field.onChange"
+                    @blur="field.onBlur"
                     :data="userStore.getArtists"
                     label-name="full_name"
                     value-key="id"
                     :show-checkbox="true"
                     placeholder="Select cover artist"
                   />
+                  <div class="form__input-alert" v-if="errors.length !== 0">
+                    {{ errorMessage }}
+                  </div>
                 </Field>
               </div>
 
@@ -139,25 +176,45 @@ console.log('positions:', userStore.getStaffByPositionCategory)
               <!-- Thumbnail artist selector  -->
               <div v-if="!sameArtist" class="publisher__field-group form__field-group">
                 <label class="form__label">Thumbnail artist</label>
-                <Field name="thumbnail-artist">
+                <Field name="thumbnail-artist" v-slot="{ field, errors, errorMessage }">
                   <Dropdown
-                    v-model="selectedThumbnailArtist"
+                    :model-value="field"
+                    @update:model-value="field.onChange"
+                    @blur="field.onBlur"
                     :data="userStore.getArtists"
                     label-name="full_name"
                     value-key="id"
                     :show-checkbox="true"
                     placeholder="Select thumbnail artist"
                   />
+                  <div class="form__input-alert" v-if="errors.length !== 0">
+                    {{ errorMessage }}
+                  </div>
                 </Field>
               </div>
 
               <!-- Same artist  -->
               <div class="publisher__field-group form__field-group">
-                <Checkbox
+                <Field
+                  name="same-artist"
                   v-model="sameArtist"
-                  class="form__checkbox"
-                  label="Same as cover artist"
-                />
+                  type="checkbox"
+                  :value="true"
+                  :unchecked-value="false"
+                  v-slot="{ field }"
+                >
+                  <Checkbox
+                    :model-value="field.value"
+                    @update:model-value="
+                      (val) => {
+                        field.onChange(val)
+                        sameArtist = val
+                      }
+                    "
+                    class="form__checkbox"
+                    label="Same as cover artist"
+                  />
+                </Field>
               </div>
 
               <div class="publisher__btn-group form__btn-group">
@@ -180,12 +237,12 @@ console.log('positions:', userStore.getStaffByPositionCategory)
 </template>
 
 <style lang="scss" scoped>
-@use '@/assets/utils' as *;
-@use '@/assets/layouts' as *;
+  @use '@/assets/utils' as *;
+  @use '@/assets/layouts' as *;
 
-.publisher {
-  &__btn-group {
-    margin-top: spacing(3);
+  .publisher {
+    &__btn-group {
+      margin-top: spacing(3);
+    }
   }
-}
 </style>

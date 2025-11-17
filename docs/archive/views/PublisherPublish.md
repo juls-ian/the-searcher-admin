@@ -200,3 +200,47 @@ const getSubcategoriesFor = (parentId) => {
 }
 ```
 
+## rich text editor 
+### using hidden input field 
+```html 
+<div class="publisher__field-group form__field-group">
+  <label class="form__label" for="tiptapEditor">Body</label>
+  <RichTextEditor @update="updateEditor"/>
+  <Field name="body" v-model="tiptapEditor" v-slot="{field, errors, errorMessage}">
+    <input type="hidden" id="tiptapEditor" >
+  </Field>
+</div>
+```
+
+## writer dropdown 
+### using ref 
+```javascript 
+  const selectedWriter = ref(null)
+```
+```html 
+<div class="publisher__field-group form__field-group">
+  <label class="form__label">Writer</label>
+  <Field name="writer">
+    <Dropdown
+      v-model="selectedWriter"
+      :data="userStore.getWriters"
+      label-name="full_name"
+      value-key="id"
+      :show-checkbox="true"
+      placeholder="Select writer"
+    />
+  </Field>
+</div>
+```
+
+## same artist checkbox 
+### initial version
+```html 
+<div class="publisher__field-group form__field-group">
+  <Checkbox
+    v-model="sameArtist"
+    class="form__checkbox"
+    label="Same as cover artist"
+  />
+</div>
+```
