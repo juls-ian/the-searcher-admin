@@ -244,3 +244,14 @@ const getSubcategoriesFor = (parentId) => {
   />
 </div>
 ```
+
+## updateEditor
+### 1.0: before using slot props approach 
+```javascript 
+  const tiptapEditor = ref('')
+
+  const updateEditor = (value) => {
+    // Ref update
+    tiptapEditor.value = value
+  }
+```

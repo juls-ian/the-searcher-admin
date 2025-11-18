@@ -17,13 +17,7 @@
   const userStore = useUserStore()
 
   const selectedCategory = ref(null) // the ids of currently selected
-  const tiptapEditor = ref('')
   const sameArtist = ref(false)
-
-  const updateEditor = (value) => {
-    // Ref update
-    tiptapEditor.value = value
-  }
 
   onMounted(() => {
     articleStore.fetchArticles()
@@ -45,9 +39,15 @@
                 <!-- Title field  -->
                 <label class="form__label" for="title">Title</label>
                 <Field name="title" v-slot="{ field, errors, errorMessage }">
-                  <input type="text" id="title" placeholder="Add title" class="form__input" />
+                  <input
+                    type="text"
+                    v-bind="field"
+                    id="title"
+                    placeholder="Add title"
+                    class="form__input"
+                  />
 
-                  <div class="form__input-alert" v-bind="field" v-if="errors.length !== 0">
+                  <div class="form__input-alert" v-if="errors.length !== 0">
                     {{ errorMessage }}
                   </div>
                 </Field>
@@ -55,9 +55,10 @@
 
               <!-- Add to ticker checkbox -->
               <div class="publisher__field-group form__field-group">
+                <!-- onChange for regular inputs (dropdown, rte, etc) -->
                 <Field
                   name="add-to-ticker"
-                  v-slot="{ field, value }"
+                  v-slot="{ field, value, errors }"
                   type="checkbox"
                   :value="true"
                   :unchecked-value="false"
@@ -81,7 +82,7 @@
                 <label class="form__label">Category</label>
                 <Field name="category" v-slot="{ field, errors, errorMessage }">
                   <Dropdown
-                    :model-value="field"
+                    :model-value="field.value"
                     @update:model-value="field.onChange"
                     @blur="field.onBlur"
                     v-model="selectedCategory"
@@ -103,7 +104,7 @@
                 <label class="form__label">Writer</label>
                 <Field name="writer" v-slot="{ field, errors, errorMessage }">
                   <Dropdown
-                    :model-value="field"
+                    :model-value="field.value"
                     @update:model-value="field.onChange"
                     @blur="field.onBlur"
                     :data="userStore.getWriters"
@@ -140,8 +141,13 @@
               <!-- Cover -->
               <div class="publisher__field-group form__field-group">
                 <label class="form__label">Cover</label>
-                <Field name="cover">
-                  <FileUploader />
+                <!-- handleChange for file inputs -->
+                <Field name="cover" v-slot="{ field, errors, errorMessage, handleChange }">
+                  <FileUploader :model-value="field.value" @update:model-value="handleChange" />
+
+                  <div class="form__input-alert" v-if="errors.length !== 0">
+                    {{ errorMessage }}
+                  </div>
                 </Field>
               </div>
 
@@ -150,7 +156,7 @@
                 <label class="form__label">Cover artist</label>
                 <Field name="cover-artist" v-slot="{ field, errors, errorMessage }">
                   <Dropdown
-                    :model-value="field"
+                    :model-value="field.value"
                     @update:model-value="field.onChange"
                     @blur="field.onBlur"
                     :data="userStore.getArtists"
@@ -168,8 +174,12 @@
               <!-- Thumbnail -->
               <div v-if="!sameArtist" class="publisher__field-group form__field-group">
                 <label class="form__label">Thumbnail</label>
-                <Field name="thumbnail">
-                  <FileUploader />
+                <Field name="thumbnail" v-slot="{ field, errors, errorMessage, handleChange }">
+                  <FileUploader :model-value="field.value" @update:model-value="handleChange" />
+
+                  <div class="form__input-alert" v-if="errors.length !== 0">
+                    {{ errorMessage }}
+                  </div>
                 </Field>
               </div>
 
@@ -178,7 +188,7 @@
                 <label class="form__label">Thumbnail artist</label>
                 <Field name="thumbnail-artist" v-slot="{ field, errors, errorMessage }">
                   <Dropdown
-                    :model-value="field"
+                    :model-value="field.value"
                     @update:model-value="field.onChange"
                     @blur="field.onBlur"
                     :data="userStore.getArtists"
