@@ -1,28 +1,38 @@
 <script setup>
   import MainLayout from '@/layouts/MainLayout.vue'
-  import { Form, Field } from 'vee-validate'
+  import { Form, Field, useForm } from 'vee-validate'
+  import { onMounted, ref, watch } from 'vue'
   import { useArticleStore } from '@/stores/article'
   import { useArticleCategoryStore } from '@/stores/articleCategory'
   import { useUserStore } from '@/stores/user'
 
   import Dropdown from '@/components/forms/Dropdown.vue'
-  import { onMounted, ref } from 'vue'
   import Checkbox from '@/components/forms/Checkbox.vue'
   import FileUploader from '@/components/media/FileUploader.vue'
-  import MultiFileUploader from '@/components/media/MultiFileUploader.vue'
   import RichTextEditor from '@/components/forms/RichTextEditor.vue'
 
   const articleStore = useArticleStore()
   const articleCategoryStore = useArticleCategoryStore()
   const userStore = useUserStore()
 
-  const selectedCategory = ref(null) // the ids of currently selected
   const sameArtist = ref(false)
+  // Accessing form methods
+  const {setFieldValue} = useForm()
+
 
   onMounted(() => {
     articleStore.fetchArticles()
     articleCategoryStore.fetchArticleCategories()
     userStore.fetchUsers()
+  })
+
+  // Safety check
+  watch(sameArtist, (newValue) => {
+    if (newValue === true) {
+      // Clearing thumbnail and thumbnail-artist when sameArtist is true
+      setFieldValue('thumbnail', null)
+      setFieldValue('thumbnail-artist', null)
+    }
   })
 
   console.log('positions:', userStore.getStaffByPositionCategory)
@@ -85,7 +95,6 @@
                     :model-value="field.value"
                     @update:model-value="field.onChange"
                     @blur="field.onBlur"
-                    v-model="selectedCategory"
                     :data="articleCategoryStore.categories"
                     label-name="category_name"
                     value-key="id"
