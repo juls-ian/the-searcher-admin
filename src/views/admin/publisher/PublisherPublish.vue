@@ -10,6 +10,7 @@
   import Checkbox from '@/components/forms/Checkbox.vue'
   import FileUploader from '@/components/media/FileUploader.vue'
   import RichTextEditor from '@/components/forms/RichTextEditor.vue'
+import articleSchema from '@/composables/articleSchema'
 
   const articleStore = useArticleStore()
   const articleCategoryStore = useArticleCategoryStore()
@@ -35,6 +36,10 @@
     }
   })
 
+  const handleSubmit = (values) => {
+    console.log('Form values:', values)
+  }
+
   console.log('positions:', userStore.getStaffByPositionCategory)
 </script>
 
@@ -43,7 +48,7 @@
     <div class="workspace">
       <div class="workspace__main-panel">
         <div class="publisher">
-          <Form class="publisher__form form">
+          <Form class="publisher__form form" @submit="handleSubmit" :validation-schema="articleSchema">
             <div class="publisher__row form__row">
               <div class="publisher__field-group form__field-group">
                 <!-- Title field  -->
