@@ -69,13 +69,20 @@
 
   &__input-alert {
     min-height: 0.6rem;
-    position: absolute;
     padding-top: spacing(5);
     pointer-events: none; // fields cannot be clicked after errorMessage appear fix
 
+    &--abs {
+      position: absolute !important;
+    }
+
+    &--rel {
+      position: relative !important;
+    }
+
     p {
       color: $dashboard-red;
-      font-size: $font-size-sm;
+      font-size: $font-size-xs;
       font-weight: bold;
 
       pointer-events: auto; // fields cannot be clicked after errorMessage appear fix

@@ -10,7 +10,7 @@
   import Checkbox from '@/components/forms/Checkbox.vue'
   import FileUploader from '@/components/media/FileUploader.vue'
   import RichTextEditor from '@/components/forms/RichTextEditor.vue'
-import articleSchema from '@/composables/articleSchema'
+  import articleSchema from '@/composables/articleSchema'
 
   const articleStore = useArticleStore()
   const articleCategoryStore = useArticleCategoryStore()
@@ -18,8 +18,7 @@ import articleSchema from '@/composables/articleSchema'
 
   const sameArtist = ref(false)
   // Accessing form methods
-  const {setFieldValue} = useForm()
-
+  const { setFieldValue } = useForm()
 
   onMounted(() => {
     articleStore.fetchArticles()
@@ -48,7 +47,11 @@ import articleSchema from '@/composables/articleSchema'
     <div class="workspace">
       <div class="workspace__main-panel">
         <div class="publisher">
-          <Form class="publisher__form form" @submit="handleSubmit" :validation-schema="articleSchema">
+          <Form
+            class="publisher__form form"
+            @submit="handleSubmit"
+            :validation-schema="articleSchema"
+          >
             <div class="publisher__row form__row">
               <div class="publisher__field-group form__field-group">
                 <!-- Title field  -->
@@ -62,8 +65,8 @@ import articleSchema from '@/composables/articleSchema'
                     class="form__input"
                   />
 
-                  <div class="form__input-alert" v-if="errors.length !== 0">
-                    {{ errorMessage }}
+                  <div class="publisher__alert form__input-alert form__input-alert--rel" v-if="errors.length !== 0">
+                    <p>{{ errorMessage }}</p>
                   </div>
                 </Field>
               </div>
@@ -86,8 +89,8 @@ import articleSchema from '@/composables/articleSchema'
                     label="Add to ticker"
                   />
 
-                  <div class="form__input-alert" v-if="errors.length !== 0">
-                    {{ errorMessage }}
+                  <div class="publisher__alert form__input-alert form__input-alert--rel" v-if="errors.length !== 0">
+                    <p>{{ errorMessage }}</p>
                   </div>
                 </Field>
               </div>
@@ -107,8 +110,8 @@ import articleSchema from '@/composables/articleSchema'
                     placeholder="Select category"
                     hierarchal
                   />
-                  <div class="form__input-alert" v-if="errors.length !== 0">
-                    {{ errorMessage }}
+                  <div class="publisher__alert form__input-alert form__input-alert--rel" v-if="errors.length !== 0">
+                    <p>{{ errorMessage }}</p>
                   </div>
                 </Field>
               </div>
@@ -127,8 +130,8 @@ import articleSchema from '@/composables/articleSchema'
                     :show-checkbox="true"
                     placeholder="Select writer"
                   />
-                  <div class="form__input-alert" v-if="errors.length !== 0">
-                    {{ errorMessage }}
+                  <div class="publisher__alert form__input-alert form__input-alert--rel" v-if="errors.length !== 0">
+                    <p>{{ errorMessage }}</p>
                   </div>
                 </Field>
               </div>
@@ -146,8 +149,8 @@ import articleSchema from '@/composables/articleSchema'
                 <Field name="body" v-slot="{ field, errors, errorMessage }">
                   <RichTextEditor :model-value="field.value" @update:model-value="field.onChange" />
 
-                  <div class="form__input-alert" v-if="errors.length !== 0">
-                    {{ errorMessage }}
+                  <div class="publisher__alert form__input-alert form__input-alert--rel" v-if="errors.length !== 0">
+                    <p>{{ errorMessage }}</p>
                   </div>
                 </Field>
               </div>
@@ -159,8 +162,8 @@ import articleSchema from '@/composables/articleSchema'
                 <Field name="cover" v-slot="{ field, errors, errorMessage, handleChange }">
                   <FileUploader :model-value="field.value" @update:model-value="handleChange" />
 
-                  <div class="form__input-alert" v-if="errors.length !== 0">
-                    {{ errorMessage }}
+                  <div class="publisher__alert form__input-alert form__input-alert--rel" v-if="errors.length !== 0">
+                    <p>{{ errorMessage }}</p>
                   </div>
                 </Field>
               </div>
@@ -179,8 +182,8 @@ import articleSchema from '@/composables/articleSchema'
                     :show-checkbox="true"
                     placeholder="Select cover artist"
                   />
-                  <div class="form__input-alert" v-if="errors.length !== 0">
-                    {{ errorMessage }}
+                  <div class="publisher__alert form__input-alert form__input-alert--rel" v-if="errors.length !== 0">
+                    <p>{{ errorMessage }}</p>
                   </div>
                 </Field>
               </div>
@@ -191,8 +194,8 @@ import articleSchema from '@/composables/articleSchema'
                 <Field name="thumbnail" v-slot="{ field, errors, errorMessage, handleChange }">
                   <FileUploader :model-value="field.value" @update:model-value="handleChange" />
 
-                  <div class="form__input-alert" v-if="errors.length !== 0">
-                    {{ errorMessage }}
+                  <div class="publisher__alert form__input-alert form__input-alert--rel" v-if="errors.length !== 0">
+                    <p>{{ errorMessage }}</p>
                   </div>
                 </Field>
               </div>
@@ -211,8 +214,8 @@ import articleSchema from '@/composables/articleSchema'
                     :show-checkbox="true"
                     placeholder="Select thumbnail artist"
                   />
-                  <div class="form__input-alert" v-if="errors.length !== 0">
-                    {{ errorMessage }}
+                  <div class="publisher__alert form__input-alert form__input-alert--rel" v-if="errors.length !== 0">
+                    <p>{{ errorMessage }}</p>
                   </div>
                 </Field>
               </div>
@@ -267,6 +270,10 @@ import articleSchema from '@/composables/articleSchema'
   .publisher {
     &__btn-group {
       margin-top: spacing(3);
+    }
+
+    &__alert {
+      margin-top: spacing(-4);
     }
   }
 </style>

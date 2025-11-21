@@ -100,7 +100,7 @@ const handleLogin = async () => {
                     required
                   />
 
-                  <div class="login__alert form__input-alert" v-if="errors.length !== 0">
+                  <div class="login__alert form__input-alert form__input-alert--abs" v-if="errors.length !== 0">
                     <p>
                       {{ errorMessage || '&nbsp;' /*reserve space so nothing shifts */ }}
                     </p>
@@ -125,7 +125,7 @@ const handleLogin = async () => {
                     placeholder="Password"
                     required
                   />
-                  <div class="login__alert form__input-alert" v-if="errors.length !== 0">
+                  <div class="login__alert form__input-alert form__input-alert--abs" v-if="errors.length !== 0">
                     <p>
                       {{ errorMessage || '&nbsp;' }}
                     </p>
