@@ -53,7 +53,7 @@
             :validation-schema="articleSchema"
           >
             <div class="publisher__row form__row">
-              <div class="publisher__field-group form__field-group">
+              <div class="form__field-group">
                 <!-- Title field  -->
                 <label class="form__label" for="title">Title</label>
                 <Field name="title" v-slot="{ field, errors, errorMessage }">
@@ -65,14 +65,14 @@
                     class="form__input"
                   />
 
-                  <div class="publisher__alert form__input-alert form__input-alert--rel" v-if="errors.length !== 0">
-                    <p>{{ errorMessage }}</p>
+                  <div class="form__input-alert form__input-alert--rel" v-if="errors.length !== 0">
+                    <p>{{ errorMessage || '&nbsp;' }}</p>
                   </div>
                 </Field>
               </div>
 
               <!-- Add to ticker checkbox -->
-              <div class="publisher__field-group form__field-group">
+              <div class="form__field-group">
                 <!-- onChange for regular inputs (dropdown, rte, etc) -->
                 <Field
                   name="add-to-ticker"
@@ -89,14 +89,14 @@
                     label="Add to ticker"
                   />
 
-                  <div class="publisher__alert form__input-alert form__input-alert--rel" v-if="errors.length !== 0">
-                    <p>{{ errorMessage }}</p>
+                  <div class="form__input-alert form__input-alert--rel" v-if="errors.length !== 0">
+                    <p>{{ errorMessage || '&nbsp;' }}</p>
                   </div>
                 </Field>
               </div>
 
               <!-- Article Category dropdown  -->
-              <div class="publisher__field-group form__field-group">
+              <div class="form__field-group">
                 <label class="form__label">Category</label>
                 <Field name="category" v-slot="{ field, errors, errorMessage }">
                   <Dropdown
@@ -110,14 +110,14 @@
                     placeholder="Select category"
                     hierarchal
                   />
-                  <div class="publisher__alert form__input-alert form__input-alert--rel" v-if="errors.length !== 0">
-                    <p>{{ errorMessage }}</p>
+                  <div class="form__input-alert form__input-alert--rel" v-if="errors.length !== 0">
+                    <p>{{ errorMessage || '&nbsp;' }}</p>
                   </div>
                 </Field>
               </div>
 
               <!-- Writer selector  -->
-              <div class="publisher__field-group form__field-group">
+              <div class="form__field-group">
                 <label class="form__label">Writer</label>
                 <Field name="writer" v-slot="{ field, errors, errorMessage }">
                   <Dropdown
@@ -130,118 +130,159 @@
                     :show-checkbox="true"
                     placeholder="Select writer"
                   />
-                  <div class="publisher__alert form__input-alert form__input-alert--rel" v-if="errors.length !== 0">
-                    <p>{{ errorMessage }}</p>
+                  <div class="form__input-alert form__input-alert--rel" v-if="errors.length !== 0">
+                    <p>{{ errorMessage || '&nbsp;' }}</p>
                   </div>
                 </Field>
               </div>
 
               <!-- Date picker -->
-              <div class="publisher__field-group form__field-group">
+              <div class="form__field-group">
                 <label class="form__label">Date</label>
 
                 <Field name="date"> </Field>
               </div>
 
               <!-- Body textarea -->
-              <div class="publisher__field-group form__field-group">
+              <div class="form__field-group">
                 <label class="form__label" for="tiptapEditor">Body</label>
                 <Field name="body" v-slot="{ field, errors, errorMessage }">
                   <RichTextEditor :model-value="field.value" @update:model-value="field.onChange" />
 
-                  <div class="publisher__alert form__input-alert form__input-alert--rel" v-if="errors.length !== 0">
-                    <p>{{ errorMessage }}</p>
+                  <div class="form__input-alert form__input-alert--rel" v-if="errors.length !== 0">
+                    <p>{{ errorMessage || '&nbsp;' }}</p>
                   </div>
                 </Field>
               </div>
 
-              <!-- Cover -->
-              <div class="publisher__field-group form__field-group">
-                <label class="form__label">Cover</label>
-                <!-- handleChange for file inputs -->
-                <Field name="cover" v-slot="{ field, errors, errorMessage, handleChange }">
-                  <FileUploader :model-value="field.value" @update:model-value="handleChange" />
+              <!-- Cover block -->
+              <div class="form__file-group">
+                <!-- Cover Photo -->
+                <div class="form__field-group">
+                  <label class="form__label">Cover</label>
+                  <!-- handleChange for file inputs -->
+                  <Field name="cover" v-slot="{ field, errors, errorMessage, handleChange }">
+                    <FileUploader :model-value="field.value" @update:model-value="handleChange" />
 
-                  <div class="publisher__alert form__input-alert form__input-alert--rel" v-if="errors.length !== 0">
-                    <p>{{ errorMessage }}</p>
+                    <div
+                      class="form__input-alert form__input-alert--rel"
+                      v-if="errors.length !== 0"
+                    >
+                      <p>{{ errorMessage || '&nbsp;' }}</p>
+                    </div>
+                  </Field>
+                </div>
+
+                <div class="form__file-meta-group">
+                  <!-- Cover artist selector  -->
+                  <div class="form__field-group">
+                    <label class="form__label">Cover artist</label>
+                    <Field name="cover-artist" v-slot="{ field, errors, errorMessage }">
+                      <Dropdown
+                        :model-value="field.value"
+                        @update:model-value="field.onChange"
+                        @blur="field.onBlur"
+                        :data="userStore.getArtists"
+                        label-name="full_name"
+                        value-key="id"
+                        :show-checkbox="true"
+                        placeholder="Select cover artist"
+                      />
+                      <div
+                        class="form__input-alert form__input-alert--rel"
+                        v-if="errors.length !== 0"
+                      >
+                        <p>{{ errorMessage || '&nbsp;' }}</p>
+                      </div>
+                    </Field>
                   </div>
-                </Field>
+
+                  <!-- Caption -->
+                  <div class="form__field-group">
+                    <label class="form__label" for="tiptapEditor">Caption</label>
+                    <Field name="caption" v-slot="{ field, errors, errorMessage }">
+                      <RichTextEditor
+                        :model-value="field.value"
+                        @update:model-value="field.onChange"
+                        type="caption"
+                      />
+
+                      <div
+                        class="form__input-alert form__input-alert--rel"
+                        v-if="errors.length !== 0"
+                      >
+                        <p>{{ errorMessage || '&nbsp;' }}</p>
+                      </div>
+                    </Field>
+                  </div>
+                </div>
               </div>
 
-              <!-- Cover artist selector  -->
-              <div class="publisher__field-group form__field-group">
-                <label class="form__label">Cover artist</label>
-                <Field name="cover-artist" v-slot="{ field, errors, errorMessage }">
-                  <Dropdown
-                    :model-value="field.value"
-                    @update:model-value="field.onChange"
-                    @blur="field.onBlur"
-                    :data="userStore.getArtists"
-                    label-name="full_name"
-                    value-key="id"
-                    :show-checkbox="true"
-                    placeholder="Select cover artist"
-                  />
-                  <div class="publisher__alert form__input-alert form__input-alert--rel" v-if="errors.length !== 0">
-                    <p>{{ errorMessage }}</p>
+              <!-- Thumbnail block -->
+              <div class="form__file-group">
+                <!-- Thumbnail Photo -->
+                <div v-if="!sameArtist" class="form__field-group">
+                  <label class="form__label">Thumbnail</label>
+                  <Field name="thumbnail" v-slot="{ field, errors, errorMessage, handleChange }">
+                    <FileUploader :model-value="field.value" @update:model-value="handleChange" />
+
+                    <div
+                      class="form__input-alert form__input-alert--rel"
+                      v-if="errors.length !== 0"
+                    >
+                      <p>{{ errorMessage || '&nbsp;' }}</p>
+                    </div>
+                  </Field>
+                </div>
+
+                <div class="form__file-meta-group">
+                  <!-- Thumbnail artist selector  -->
+                  <div v-if="!sameArtist" class="form__field-group">
+                    <label class="form__label">Thumbnail artist</label>
+                    <Field name="thumbnail-artist" v-slot="{ field, errors, errorMessage }">
+                      <Dropdown
+                        :model-value="field.value"
+                        @update:model-value="field.onChange"
+                        @blur="field.onBlur"
+                        :data="userStore.getArtists"
+                        label-name="full_name"
+                        value-key="id"
+                        :show-checkbox="true"
+                        placeholder="Select thumbnail artist"
+                      />
+                      <div
+                        class="form__input-alert form__input-alert--rel"
+                        v-if="errors.length !== 0"
+                      >
+                        <p>{{ errorMessage || '&nbsp;' }}</p>
+                      </div>
+                    </Field>
                   </div>
-                </Field>
-              </div>
 
-              <!-- Thumbnail -->
-              <div v-if="!sameArtist" class="publisher__field-group form__field-group">
-                <label class="form__label">Thumbnail</label>
-                <Field name="thumbnail" v-slot="{ field, errors, errorMessage, handleChange }">
-                  <FileUploader :model-value="field.value" @update:model-value="handleChange" />
-
-                  <div class="publisher__alert form__input-alert form__input-alert--rel" v-if="errors.length !== 0">
-                    <p>{{ errorMessage }}</p>
+                  <!-- Same artist  -->
+                  <div class="form__field-group">
+                    <Field
+                      name="same-artist"
+                      v-model="sameArtist"
+                      type="checkbox"
+                      :value="true"
+                      :unchecked-value="false"
+                      v-slot="{ field }"
+                    >
+                      <Checkbox
+                        :model-value="field.value"
+                        @update:model-value="
+                          (val) => {
+                            field.onChange(val)
+                            sameArtist = val
+                          }
+                        "
+                        class="form__checkbox publisher__same-artist"
+                        label="Same as cover artist"
+                      />
+                    </Field>
                   </div>
-                </Field>
-              </div>
-
-              <!-- Thumbnail artist selector  -->
-              <div v-if="!sameArtist" class="publisher__field-group form__field-group">
-                <label class="form__label">Thumbnail artist</label>
-                <Field name="thumbnail-artist" v-slot="{ field, errors, errorMessage }">
-                  <Dropdown
-                    :model-value="field.value"
-                    @update:model-value="field.onChange"
-                    @blur="field.onBlur"
-                    :data="userStore.getArtists"
-                    label-name="full_name"
-                    value-key="id"
-                    :show-checkbox="true"
-                    placeholder="Select thumbnail artist"
-                  />
-                  <div class="publisher__alert form__input-alert form__input-alert--rel" v-if="errors.length !== 0">
-                    <p>{{ errorMessage }}</p>
-                  </div>
-                </Field>
-              </div>
-
-              <!-- Same artist  -->
-              <div class="publisher__field-group form__field-group">
-                <Field
-                  name="same-artist"
-                  v-model="sameArtist"
-                  type="checkbox"
-                  :value="true"
-                  :unchecked-value="false"
-                  v-slot="{ field }"
-                >
-                  <Checkbox
-                    :model-value="field.value"
-                    @update:model-value="
-                      (val) => {
-                        field.onChange(val)
-                        sameArtist = val
-                      }
-                    "
-                    class="form__checkbox"
-                    label="Same as cover artist"
-                  />
-                </Field>
+                </div>
               </div>
 
               <div class="publisher__btn-group form__btn-group">
@@ -268,8 +309,15 @@
   @use '@/assets/layouts' as *;
 
   .publisher {
+
     &__btn-group {
       margin-top: spacing(3);
+    }
+
+    &__same-artist {
+        @include respond-to-mf(tablet-lg) {
+      margin-top: spacing(2);
+    }
     }
 
     &__alert {

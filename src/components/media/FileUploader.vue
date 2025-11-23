@@ -242,21 +242,21 @@ const formatFileSize = (bytes) => {
 
   @include respond-to-mf(md) {
     padding: spacing(2);
-    width: 45%;
+    // width: 45%;
     margin: 0 0;
   }
 
   @include respond-to-mf(tablet-sm) {
     padding: spacing(5);
-    width: 50%;
+    // width: 50%;
   }
 
   @include respond-to-mf(tablet-lg) {
-    width: 60%;
+    // width: 60%;
   }
 
   @include respond-to-mf(desktop-sm) {
-    width: 40%;
+    // width: 40%;
   }
 
   &__input {
