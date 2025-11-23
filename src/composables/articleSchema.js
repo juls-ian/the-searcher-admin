@@ -17,14 +17,15 @@ const articleSchema = yup.object({
       return !value || (value && value.type.startsWith('image/'))
     }),
   'cover-artist': yup.number().required('Cover artist is required'),
+  caption: yup.string().required('Caption is required'),
   thumbnail: yup.mixed().when('same-artist', {
     is: false,
     then: (schema) => schema.required('Thumbnail is required'),
     otherwise: (schema) => schema.nullable() // else null
   }),
   'thumbnail-artist': yup.number().when('same-artist', {
-    is:false,
-    then: (schema)=> schema.required('Thumbnail artist is required'),
+    is: false,
+    then: (schema) => schema.required('Thumbnail artist is required'),
     otherwise: (schema) => schema.nullable()
   })
 })
