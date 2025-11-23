@@ -48,3 +48,39 @@ const editor = useEditor({
     }
   )
 ```
+
+## useEditor
+### 1.0: using editorProps
+```javascript
+  const editor = useEditor({
+    content: "<p>I'm running Tiptap with Vue.js. 🎉</p>",
+    extensions: [
+      StarterKit.configure({
+        // Override the default keyboard shortcuts to include selectAll
+        // This ensures Ctrl+A works properly
+      }),
+      TextStyle,
+      Color.configure({
+        types: ['textStyle']
+      }),
+      NodeRange.configure({
+        key: null
+      })
+    ],
+    // Add keyboard shortcut handler
+    editorProps: {
+      handleKeyDown: (view, event) => {
+        // Check for Ctrl+A (Windows/Linux) or Cmd+A (Mac)
+        if ((event.ctrlKey || event.metaKey) && event.key === 'a') {
+          event.preventDefault()
+          editor.value?.commands.selectAll()
+          return true
+        }
+        return false
+      }
+    },
+    onUpdate: () => {
+      emit('update:modelValue', editor.value.getHTML())
+    }
+  })
+```

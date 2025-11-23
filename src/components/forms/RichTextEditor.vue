@@ -1,54 +1,72 @@
 <script setup>
-import DragHandle from '@tiptap/extension-drag-handle-vue-3'
-import NodeRange from '@tiptap/extension-node-range'
-import { Color, TextStyle } from '@tiptap/extension-text-style'
-import StarterKit from '@tiptap/starter-kit'
-import { Editor, EditorContent, useEditor } from '@tiptap/vue-3'
-import { watch } from 'vue'
+  import DragHandle from '@tiptap/extension-drag-handle-vue-3'
+  import NodeRange from '@tiptap/extension-node-range'
+  import { Color, TextStyle } from '@tiptap/extension-text-style'
+  import StarterKit from '@tiptap/starter-kit'
+  import { Editor, EditorContent, Extension, useEditor } from '@tiptap/vue-3'
+  import { watch } from 'vue'
 
   const emit = defineEmits(['update:modelValue'])
   const props = defineProps({
     modelValue: {
       type: String,
       default: ''
+    },
+    type: {
+      type: String,
+      default: 'body',
+      validator: (value) => ['body', 'caption'].includes(value)
     }
   })
 
-const editor = useEditor({
-  content: "<p>I'm running Tiptap with Vue.js. 🎉</p>",
-  extensions: [
-    StarterKit,
-    TextStyle,
-    Color.configure({
-      types: ['textStyle'],
-    }),
-    NodeRange.configure({
-      // allow to select only on depth 0
-      // depth: 0,
-      key: null,
-    }),
-  ],
-  onUpdate: () => {
-    // every update is emitted
-    // travels from here to the parent
-    emit('update:modelValue', editor.value.getHTML())
+  const SelectAll = Extension.create({
+    name: 'selectAll',
+
+   addKeyboardShortcuts() {
+    return {
+      'Mod-a': () => {
+        this.editor.commands.selectAll()
+        return true
+      },
+    }
   },
-})
+  })
+
+  const editor = useEditor({
+    content: "<p>I'm running Tiptap with Vue.js. 🎉</p>",
+    extensions: [
+      StarterKit,
+      TextStyle,
+      Color.configure({
+        types: ['textStyle']
+      }),
+      NodeRange.configure({
+        // allow to select only on depth 0
+        // depth: 0,
+        key: null
+      }),
+      SelectAll
+    ],
+    onUpdate: () => {
+      // every update is emitted
+      // travels from here to the parent
+      emit('update:modelValue', editor.value.getHTML())
+    }
+  })
 
   // Watcher for the modelValue external changes
   watch(
     () => props.modelValue,
     (newValue) => {
-      if(editor.value && newValue !== editor.value.getHTML()) {
+      if (editor.value && newValue !== editor.value.getHTML()) {
         editor.value.commands.setContent(newValue)
-
       }
     }
   )
 </script>
 
 <template>
-  <div class="editor">
+  <div class="editor" :class="`editor--${props.type}`">
     <div v-if="editor" class="editor__toolbar">
       <div class="editor__button-group">
         <!-- Row 1 -->
@@ -74,6 +92,7 @@ const editor = useEditor({
           </button>
 
           <button
+            v-if="props.type === 'body'"
             type="button"
             class="editor__button"
             @click="editor.chain().focus().toggleStrike().run()"
@@ -84,6 +103,7 @@ const editor = useEditor({
           </button>
 
           <button
+            v-if="props.type === 'body'"
             type="button"
             class="editor__button"
             @click="editor.chain().focus().toggleCode().run()"
@@ -102,6 +122,7 @@ const editor = useEditor({
           </button>
 
           <button
+            v-if="props.type === 'body'"
             type="button"
             class="editor__button"
             @click="editor.chain().focus().clearNodes().run()"
@@ -110,6 +131,7 @@ const editor = useEditor({
           </button>
 
           <button
+            v-if="props.type === 'body'"
             type="button"
             class="editor__button"
             @click="editor.chain().focus().focus().setParagraph().run()"
@@ -122,6 +144,7 @@ const editor = useEditor({
         <!-- Row 2 -->
         <div class="editor__button-row">
           <button
+            v-if="props.type === 'body'"
             type="button"
             class="editor__button"
             @click="editor.chain().focus().focus().toggleHeading({ level: 1 }).run()"
@@ -131,6 +154,7 @@ const editor = useEditor({
           </button>
 
           <button
+            v-if="props.type === 'body'"
             type="button"
             class="editor__button"
             @click="editor.chain().focus().focus().toggleHeading({ level: 2 }).run()"
@@ -140,6 +164,7 @@ const editor = useEditor({
           </button>
 
           <button
+            v-if="props.type === 'body'"
             type="button"
             class="editor__button"
             @click="editor.chain().focus().focus().toggleHeading({ level: 3 }).run()"
@@ -149,6 +174,7 @@ const editor = useEditor({
           </button>
 
           <button
+            v-if="props.type === 'body'"
             type="button"
             class="editor__button"
             @click="editor.chain().focus().focus().toggleHeading({ level: 4 }).run()"
@@ -158,6 +184,7 @@ const editor = useEditor({
           </button>
 
           <button
+            v-if="props.type === 'body'"
             type="button"
             class="editor__button"
             @click="editor.chain().focus().focus().toggleHeading({ level: 5 }).run()"
@@ -167,6 +194,7 @@ const editor = useEditor({
           </button>
 
           <button
+            v-if="props.type === 'body'"
             type="button"
             class="editor__button"
             @click="editor.chain().focus().focus().toggleHeading({ level: 6 }).run()"
@@ -179,6 +207,7 @@ const editor = useEditor({
         <!-- Row 3 -->
         <div class="editor__button-row">
           <button
+            v-if="props.type === 'body'"
             type="button"
             class="editor__button"
             @click="editor.chain().focus().toggleBulletList().run()"
@@ -188,6 +217,7 @@ const editor = useEditor({
           </button>
 
           <button
+            v-if="props.type === 'body'"
             type="button"
             class="editor__button"
             @click="editor.chain().focus().toggleOrderedList().run()"
@@ -197,6 +227,7 @@ const editor = useEditor({
           </button>
 
           <button
+            v-if="props.type === 'body'"
             type="button"
             class="editor__button"
             @click="editor.chain().focus().toggleCodeBlock().run()"
@@ -206,6 +237,7 @@ const editor = useEditor({
           </button>
 
           <button
+            v-if="props.type === 'body'"
             type="button"
             class="editor__button"
             @click="editor.chain().focus().toggleBlockquote().run()"
@@ -215,6 +247,7 @@ const editor = useEditor({
           </button>
 
           <button
+            v-if="props.type === 'body'"
             type="button"
             class="editor__button"
             @click="editor.chain().focus().setHorizontalRule().run()"
@@ -222,6 +255,7 @@ const editor = useEditor({
             <span>Horizontal rule</span>
           </button>
           <button
+            v-if="props.type === 'body'"
             type="button"
             class="editor__button"
             @click="editor.chain().focus().setHardBreak().run()"
@@ -245,6 +279,7 @@ const editor = useEditor({
             <span>Redo</span>
           </button>
           <button
+            v-if="props.type === 'body'"
             type="button"
             class="editor__button"
             @click="editor.chain().focus().setColor('#800000').run()"
@@ -253,6 +288,7 @@ const editor = useEditor({
             <span>Maroon</span>
           </button>
           <button
+            v-if="props.type === 'body'"
             type="button"
             class="editor__button"
             @click="editor.chain().focus().setColor('#2f2e41').run()"
@@ -261,6 +297,7 @@ const editor = useEditor({
             <span>Charcoal</span>
           </button>
           <button
+            v-if="props.type === 'body'"
             type="button"
             class="editor__button"
             @click="editor.chain().focus().setColor('#4b5563').run()"
@@ -269,7 +306,7 @@ const editor = useEditor({
             <span>Gray</span>
           </button>
           <!-- Row 4 -->
-          <div class="editor__button-row">
+          <div class="editor__button-row" v-if="props.type === 'body'">
             <button
               type="button"
               class="editor__button"
@@ -307,13 +344,11 @@ const editor = useEditor({
     overflow-x: hidden;
     padding: 1rem;
     box-sizing: border-box;
-
     background: $surface-fields !important;
 
     p,
     ul,
     ol {
-      color: $text-dark-main;
       word-wrap: break-word;
       overflow-wrap: break-word;
     }
@@ -365,6 +400,21 @@ const editor = useEditor({
     min-width: 0; // Important: allows flex item to shrink below content size
     overflow: hidden;
 
+    &--body .tiptap {
+      p,
+      ul,
+      ol {
+        color: $text-dark-main;
+      }
+    }
+
+    &--caption .tiptap {
+      p {
+        color: $text-alt;
+        font-size: $font-size-xs;
+      }
+    }
+
     &__toolbar {
       overflow-x: auto;
       overflow-y: hidden;
@@ -372,6 +422,7 @@ const editor = useEditor({
 
     &__button-group {
       width: 100%;
+      margin-top: spacing(1);
       display: flex;
       align-items: center;
       gap: spacing(2);
