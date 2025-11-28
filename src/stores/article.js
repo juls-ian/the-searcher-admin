@@ -8,10 +8,11 @@ export const useArticleStore = defineStore('article', () => {
   const loading = ref(false)
   const error = ref(null)
   const articles = ref([])
+  const paginationLinks = ref([])
 
   // Getters
   const getSortedArticles = computed(() =>
-    [...articles.value].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)),
+    [...articles.value].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
   )
 
   /**
@@ -24,12 +25,13 @@ export const useArticleStore = defineStore('article', () => {
   }
 
   // Actions
-  async function fetchArticles(limit) {
+  async function fetchArticles(url = 'articles') {
     error.value = null
 
     try {
-      const response = await api.get('/articles')
+      const response = await api.get(url)
       articles.value = response.data || [] // assign to state
+      paginationLinks.value = response.meta.links || []
     } catch (err) {
       error.value = err.response?.data?.message || 'Cannot retrieve articles'
       throw err
@@ -42,10 +44,11 @@ export const useArticleStore = defineStore('article', () => {
     loading,
     error,
     articles,
+    paginationLinks,
     // Getters
     getRecentArticles,
     getSortedArticles,
     // Actions
-    fetchArticles,
+    fetchArticles
   }
 })

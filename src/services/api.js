@@ -36,6 +36,8 @@ api.interceptors.response.use(
     data: response.data.data, // to prevent data.data chaining
     success: response.data.success,
     message: response.data.message,
+    links: response.data.links,
+    meta: response.data.meta
   }),
   (error) => Promise.reject(error),
 )
