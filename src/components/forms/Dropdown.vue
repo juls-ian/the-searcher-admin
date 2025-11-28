@@ -1,125 +1,127 @@
 <script setup>
-import { onMounted, ref } from 'vue'
-import { useArticleCategoryStore } from '@/stores/articleCategory'
+  import { onMounted, ref } from 'vue'
+  import { useArticleCategoryStore } from '@/stores/articleCategory'
 
-/**
- * how it will receive and send data for v-model
- * props & emits
- */
+  /**
+   * how it will receive and send data for v-model
+   * props & emits
+   */
 
-// Props: data from parent -> child (receive and )
-const props = defineProps({
-  // current value: incoming data from parent (v-model)
-  modelValue: {
-    type: [Number, String, null],
-    default: null,
-  },
-  // Key for display label (field name from resource or table)
-  labelName: {
-    type: String,
-    default: 'name',
-  },
-  // Key for unique value or id (field name from resource or table)
-  valueKey: {
-    type: String,
-    default: 'id',
-  },
-  parentKey: {
-    type: String,
-    default: 'parent_id', // if hierarchal
-  },
-  data: {
-    type: Array,
-    required: true, // array of objects (flat or nested)
-  },
-  placeholder: {
-    type: String,
-    default: 'Select option',
-  },
-  hierarchal: {
-    type: Boolean,
-    default: false, // if true show nested submenus
-  },
-  multiSelect: {
-    type: Boolean,
-    default: false,
-  },
-  showCheckbox: {
-    type: Boolean,
-    default: false,
-  },
-})
+  // Props: data from parent -> child (receive and )
+  const props = defineProps({
+    // current value: incoming data from parent (v-model)
+    modelValue: {
+      type: [Number, String, null],
+      default: null
+    },
+    // Key for display label (field name from resource or table)
+    labelName: {
+      type: String,
+      default: 'name'
+    },
+    // Key for unique value or id (field name from resource or table)
+    valueKey: {
+      type: String,
+      default: 'id'
+    },
+    parentKey: {
+      type: String,
+      default: 'parent_id' // if hierarchal
+    },
+    data: {
+      type: Array,
+      required: true // array of objects (flat or nested)
+    },
+    placeholder: {
+      type: String,
+      default: 'Select option'
+    },
+    hierarchal: {
+      type: Boolean,
+      default: false // if true show nested submenus
+    },
+    multiSelect: {
+      type: Boolean,
+      default: false
+    },
+    showCheckbox: {
+      type: Boolean,
+      default: false
+    }
+  })
 
-// Emits: data from child -> parent
-const emit = defineEmits(['update:modelValue']) // update:modelValue → keeps form value in sync (two-way binding)
+  // Emits: data from child -> parent
+  const emit = defineEmits(['update:modelValue', 'blur']) // update:modelValue → keeps form value in sync (two-way binding)
 
-const isDropdownOpen = ref(false)
-const selectedItem = ref('') // category name shown
-const openSubmenuId = ref(null) // track which submenu is open
-const selectedItems = ref([null]) // for multiselect
+  const isDropdownOpen = ref(false)
+  const selectedItem = ref('') // category name shown
+  const openSubmenuId = ref(null) // track which submenu is open
+  const selectedItems = ref([null]) // for multiselect
 
-// Get children for hierarchal dropdown
-const getChildren = (parentId) => {
-  return props.data.filter((child) => child[props.parentKey] === parentId)
-}
-
-const toggleDropdown = () => {
-  isDropdownOpen.value = !isDropdownOpen.value
-  if (isDropdownOpen.value) {
-    openSubmenuId.value = null
-  }
-}
-
-const toggleSubmenu = (parentId, event) => {
-  event.stopPropagation() // prevent closing main dropdown
-  openSubmenuId.value = openSubmenuId.value === parentId ? null : parentId // open and closing submenu and updates the ref
-}
-
-// For single select with checkbox
-const isSelected = (item) => {
-  if (props.multiSelect) {
-    return selectedItem.value.includes(item[props.valueKey])
+  // Get children for hierarchal dropdown
+  const getChildren = (parentId) => {
+    return props.data.filter((child) => child[props.parentKey] === parentId)
   }
 
-  return props.modelValue === item[props.valueKey]
-}
-
-const handleSelect = (item) => {
-  if (props.multiSelect) {
-    toggleItem(item)
-  } else {
-    selectItem(item, item[props.labelName])
-  }
-}
-
-// For the multi-select checkbox
-const toggleItem = (item) => {
-  const value = item[props.valueKey]
-  const index = selectedItems.value.indexOf(value)
-
-  if (index > -1) {
-    selectedItems.value.splice(index, 1)
-  } else {
-    selectedItems.value.push(value)
+  const toggleDropdown = () => {
+    isDropdownOpen.value = !isDropdownOpen.value
+    if (isDropdownOpen.value) {
+      openSubmenuId.value = null
+    }
   }
 
-  emit('update:modelValue', selectedItems.value)
-}
-
-const selectItem = (item, path) => {
-  emit('update:modelValue', item[props.valueKey]) // emits the id so parent can get it
-  selectedItem.value = path
-  isDropdownOpen.value = false
-}
-
-const closeDropdown = () => {
-  isDropdownOpen.value = false
-
-  // Reset submenu when closing dd
-  if (!isDropdownOpen.value) {
-    openSubmenuId.value = null
+  const toggleSubmenu = (parentId, event) => {
+    event.stopPropagation() // prevent closing main dropdown
+    openSubmenuId.value = openSubmenuId.value === parentId ? null : parentId // open and closing submenu and updates the ref
   }
-}
+
+  // For single select with checkbox
+  const isSelected = (item) => {
+    if (props.multiSelect) {
+      return selectedItem.value.includes(item[props.valueKey])
+    }
+
+    return props.modelValue === item[props.valueKey]
+  }
+
+  const handleSelect = (item) => {
+    if (props.multiSelect) {
+      toggleItem(item)
+    } else {
+      selectItem(item, item[props.labelName])
+    }
+  }
+
+  // For the multi-select checkbox
+  const toggleItem = (item) => {
+    const value = item[props.valueKey]
+    const index = selectedItems.value.indexOf(value)
+
+    if (index > -1) {
+      selectedItems.value.splice(index, 1)
+    } else {
+      selectedItems.value.push(value)
+    }
+
+    emit('update:modelValue', selectedItems.value)
+  }
+
+  const selectItem = (item, path) => {
+    emit('update:modelValue', item[props.valueKey]) // emits the id so parent can get it
+    selectedItem.value = path
+    isDropdownOpen.value = false
+  }
+
+  const closeDropdown = () => {
+    isDropdownOpen.value = false
+
+    // Reset submenu when closing dd
+    if (!isDropdownOpen.value) {
+      openSubmenuId.value = null
+    }
+    // Emit blur when dropdown closes
+    // emit('blur')
+  }
 </script>
 
 <template>
@@ -159,7 +161,7 @@ const closeDropdown = () => {
               @click.stop="
                 selectItem(
                   child,
-                  `${parent[props.labelName]} > ${child[props.labelName]}`, // News > Campus
+                  `${parent[props.labelName]} > ${child[props.labelName]}` // News > Campus
                 )
               "
             >
@@ -193,191 +195,191 @@ const closeDropdown = () => {
 </template>
 
 <style lang="scss" scoped>
-@use '@/assets/utils' as *;
-@use '@/assets/layouts' as *;
-@use 'sass:color';
+  @use '@/assets/utils' as *;
+  @use '@/assets/layouts' as *;
+  @use 'sass:color';
 
-.dropdown-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 999;
-  background: transparent; // Changed from red to transparent
-}
-
-.anchor {
-  anchor-name: --menu-anchor;
-}
-
-.target {
-  position: absolute;
-  position-anchor: --menu-anchor;
-  position-area: start center;
-}
-
-.dropdown {
-  position: relative;
-  display: inline-block;
-  width: 100%;
-
-  &__button {
-    padding: 12px 20px;
-    // background: $surface-fields;
-    background: $surface-fields;
-    cursor: pointer;
-    width: 100%;
-    text-align: left;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-family: inherit;
-    font-size: inherit;
-
-    &-label {
-      color: $text-dark-main;
-      font-size: $font-size-sm;
-      font-family: $pop;
-    }
-
-    &:focus {
-      outline: 0.1rem solid $primary-muted;
-    }
-
-    &:hover {
-      background: $primary-muted;
-
-      span {
-        color: $text-light-main;
-      }
-
-      &::after {
-        color: $text-light-main;
-      }
-    }
-
-    &::after {
-      content: '▼';
-      font-size: 10px;
-      color: $text-dark-main;
-    }
-
-    .placeholder {
-      color: #999;
-    }
+  .dropdown-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999;
+    background: transparent; // Changed from red to transparent
   }
 
-  &__menu {
+  .anchor {
+    anchor-name: --menu-anchor;
+  }
+
+  .target {
     position: absolute;
+    position-anchor: --menu-anchor;
+    position-area: start center;
+  }
+
+  .dropdown {
+    position: relative;
+    display: inline-block;
     width: 100%;
-    min-width: 200px;
-    max-height: 400px;
-    top: 100%;
-    list-style-type: none;
-    left: 0;
-    margin: spacing(1) 0 0 0;
-    padding: 0;
-    background: $surface-fields !important;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    z-index: 1000;
-    overflow-y: auto;
-    // overflow-x: hidden;
 
-    &-item {
-      width: 100%; // take full width of parent
-      position: relative;
-      padding: spacing(3) spacing(4);
+    &__button {
+      padding: 12px 20px;
+      // background: $surface-fields;
+      background: $surface-fields;
       cursor: pointer;
-      border-bottom: 1px solid $text-dark-sub;
+      width: 100%;
+      text-align: left;
       display: flex;
-      justify-content: flex-start;
+      justify-content: space-between;
       align-items: center;
-      gap: 0.5em;
-      list-style: none;
-      color: $text-dark-main;
-      font-size: $font-size-sm;
-      font-family: $pop;
+      font-family: inherit;
+      font-size: inherit;
 
-      &:last-child {
-        border-bottom: none;
+      &-label {
+        color: $text-dark-main;
+        font-size: $font-size-sm;
+        font-family: $pop;
+      }
+
+      &:focus {
+        outline: 0.1rem solid $primary-muted;
       }
 
       &:hover {
         background: $primary-muted;
-        color: $text-light-main;
 
-        &.has-submenu::after {
+        span {
+          color: $text-light-main;
+        }
+
+        &::after {
           color: $text-light-main;
         }
       }
 
-      &-icon {
-        position: relative;
-      }
-
-      &.has-submenu::after {
-        content: '›';
-        font-size: 18px;
+      &::after {
+        content: '▼';
+        font-size: 10px;
         color: $text-dark-main;
-        // margin-left: spacing(5);
+      }
+
+      .placeholder {
+        color: #999;
       }
     }
-  }
 
-  &__submenu {
-    display: none;
-    width: 10%;
-    position: absolute;
-    list-style-type: none;
-    top: 0;
-    left: spacing(20);
-    margin-top: spacing(6);
-    padding: 0;
-    // background: darken($surface-light, 3%);
-    background: color.adjust($surface-light, $lightness: -3%);
-    border: 1px solid $surface-light;
-    border-radius: 4px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    min-width: 18rem;
-    max-height: 40rem;
-    overflow-y: auto;
-    z-index: 99;
+    &__menu {
+      position: absolute;
+      width: 100%;
+      min-width: 200px;
+      max-height: 400px;
+      top: 100%;
+      list-style-type: none;
+      left: 0;
+      margin: spacing(1) 0 0 0;
+      padding: 0;
+      background: $surface-fields !important;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+      overflow-y: auto;
+      // overflow-x: hidden;
 
-    &.is-open {
-      display: block;
+      &-item {
+        width: 100%; // take full width of parent
+        position: relative;
+        padding: spacing(3) spacing(4);
+        cursor: pointer;
+        border-bottom: 1px solid $text-dark-sub;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 0.5em;
+        list-style: none;
+        color: $text-dark-main;
+        font-size: $font-size-sm;
+        font-family: $pop;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &:hover {
+          background: $primary-muted;
+          color: $text-light-main;
+
+          &.has-submenu::after {
+            color: $text-light-main;
+          }
+        }
+
+        &-icon {
+          position: relative;
+        }
+
+        &.has-submenu::after {
+          content: '›';
+          font-size: 18px;
+          color: $text-dark-main;
+          // margin-left: spacing(5);
+        }
+      }
     }
 
-    &-item {
-      position: relative;
-      padding: 12px 20px;
+    &__submenu {
+      display: none;
+      width: 10%;
+      position: absolute;
+      list-style-type: none;
+      top: 0;
+      left: spacing(20);
+      margin-top: spacing(6);
+      padding: 0;
+      // background: darken($surface-light, 3%);
+      background: color.adjust($surface-light, $lightness: -3%);
+      border: 1px solid $surface-light;
+      border-radius: 4px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      min-width: 18rem;
+      max-height: 40rem;
+      overflow-y: auto;
+      z-index: 99;
+
+      &.is-open {
+        display: block;
+      }
+
+      &-item {
+        position: relative;
+        padding: 12px 20px;
+        cursor: pointer;
+        border-bottom: 1px solid $text-dark-sub;
+        display: block;
+        color: $text-dark-main;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &:hover {
+          background: #e8f4f8;
+        }
+      }
+    }
+
+    &__checkbox {
+      margin-right: spacing(2);
       cursor: pointer;
-      border-bottom: 1px solid $text-dark-sub;
-      display: block;
       color: $text-dark-main;
-
-      &:last-child {
-        border-bottom: none;
-      }
-
-      &:hover {
-        background: #e8f4f8;
-      }
+      font-size: $font-size-sm;
+      font-family: $pop;
     }
-  }
 
-  &__checkbox {
-    margin-right: spacing(2);
-    cursor: pointer;
-    color: $text-dark-main;
-    font-size: $font-size-sm;
-    font-family: $pop;
+    // &__menu-item:hover > &__submenu {
+    //   display: block;
+    // }
   }
-
-  // &__menu-item:hover > &__submenu {
-  //   display: block;
-  // }
-}
 </style>
