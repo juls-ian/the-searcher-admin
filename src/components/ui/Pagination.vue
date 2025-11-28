@@ -8,19 +8,24 @@
     if (!url) return
     emit('page-change', url)
   }
+
+  const cleanLabel = (label) => {
+    return label.replace(/&laquo;|&raquo;|»|«/g, '').trim()
+  }
 </script>
 
 <template>
   <div class="pagination">
     <button
       class="page-link"
-      v-for="link in links"
+      v-for="(link, index) in links"
       :key="index"
       @click="changePage(link.url)"
       :class="{ active: link.active }"
       :disabled="!link.url || link.active"
-      v-html="link.label"
-    />
+    >
+    {{ cleanLabel(link.label) }}
+  </button>
   </div>
 </template>
 
@@ -36,12 +41,13 @@
   }
 
   .page-link {
-    padding: spacing(1) spacing(1.5);
+    padding: spacing(1.5) spacing(1.5);
     border: 1px solid $surface-light;
-    background: $surface-light;
+    background: $primary-base;
     cursor: pointer;
     border-radius: 0.4rem;
     transition: all 0.2s;
+    font-size: $font-size-sm;
 
     &:hover:not(:disabled) {
       background: $primary-accent;
