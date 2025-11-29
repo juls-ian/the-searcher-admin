@@ -12,14 +12,26 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
       '@utils': fileURLToPath(new URL('./src/assets/utils', import.meta.url)),
       '@base': fileURLToPath(new URL('./src/assets/base', import.meta.url)),
-      '@images': fileURLToPath(new URL('./src/assets/images', import.meta.url)),
-    },
+      '@images': fileURLToPath(new URL('./src/assets/images', import.meta.url))
+    }
   },
   css: {
     preprocessorOptions: {
       scss: {
-        api: 'modern-compiler',
-      },
-    },
+        api: 'modern-compiler'
+      }
+    }
   },
+  server: {
+    proxy: {
+      '/storage': {
+        target: 'http://localhost:8000',
+        changeOrigin: true
+      },
+      '/api': {
+        target: 'http://localhost:8000',
+        changeOrigin: true
+      }
+    }
+  }
 })
