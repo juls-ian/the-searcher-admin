@@ -2,22 +2,29 @@
 
 .workspace {
   // width: 100vw;
+  display: flex;
   min-height: 100vh;
   flex-direction: row;
-  align-items: center;
-  justify-content: center;
+  gap: spacing(10);
+  @include respond-to-mf(tablet-lg)  {
+    // display: flex;
+  }
 
   &__main-panel {
     background: $surface-light;
     width: 100%;
     height: auto;
     padding: spacing(5) spacing(5);
-    gap: spacing(10);
+
+    @include respond-to-mf(tablet-lg) {
+    }
   }
 
   &__sub-panel {
+    display: flex;
+    justify-content: flex-end;
     background: $primary-muted;
-    width: 100%;
+    width: 40%;
     height: 100rem;
   }
 }
