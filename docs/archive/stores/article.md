@@ -32,3 +32,44 @@
     }
   }
 ```
+
+## getImageUrl()
+### 1.0: initial version 
+```javascript
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return 'images/default-article.jpg'
+
+    // If it's already a full URL (seeded data), use it directly
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      return imagePath
+    }
+
+    // Otherwise, it's a storage path (real uploaded images)
+    return `/storage/${imagePath}`
+  }
+  ```
+  ### 1.1: second version 
+  ```javascript 
+  const getImageUrl = (imagePath) => {
+  if (!imagePath) return '/images/default-article.jpg'
+  
+  // If it's already a full URL (like https://...), use it directly
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    return imagePath
+  }
+  
+  // If it already has /storage/ prefix, use as-is
+  if (imagePath.startsWith('/storage/')) {
+    // Check if it's a malformed path like /storage/https://...
+    if (imagePath.includes('https://') || imagePath.includes('http://')) {
+      // Extract the actual URL from the malformed path
+      const urlMatch = imagePath.match(/(https?:\/\/.+)/)
+      return urlMatch ? urlMatch[1] : '/images/default-article.jpg'
+    }
+    return imagePath
+  }
+  
+  // Otherwise, add the storage prefix
+  return `/storage/${imagePath}`
+}
+```

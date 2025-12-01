@@ -9,6 +9,7 @@ export const useArticleStore = defineStore('article', () => {
   const error = ref(null)
   const articles = ref([])
   const paginationLinks = ref([])
+  const paginationMeta = ref([])
 
   // Getters
   const getSortedArticles = computed(() =>
@@ -25,13 +26,14 @@ export const useArticleStore = defineStore('article', () => {
   }
 
   // Actions
-  async function fetchArticles(url = 'articles') {
+  async function fetchArticles(url = 'articles', params = {}) {
     error.value = null
 
     try {
-      const response = await api.get(url)
+      const response = await api.get(url, { params })
       articles.value = response.data || [] // assign to state
       paginationLinks.value = response.meta.links || []
+      paginationMeta.value = response.meta || {}
     } catch (err) {
       error.value = err.response?.data?.message || 'Cannot retrieve articles'
       throw err
