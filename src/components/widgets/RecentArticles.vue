@@ -36,7 +36,7 @@
       </div>
 
       <div class="widget__feed-right">
-        <span class="article__category">{{ article.category }}</span>
+        <span class="article__category">{{ article.category.parent }}</span>
         <span class="article__writer">{{ article.writer }}</span>
         <span class="article__publish-date">{{ article.published_at }}</span>
         <div class="options">
