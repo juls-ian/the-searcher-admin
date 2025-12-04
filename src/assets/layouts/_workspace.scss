@@ -4,10 +4,10 @@
   // width: 100vw;
   display: flex;
   min-height: 100vh;
-  flex-direction: row;
+  flex-direction: column;
   gap: spacing(10);
-  @include respond-to-mf(tablet-lg)  {
-    // display: flex;
+  @include respond-to-mf(tablet-lg) {
+    flex-direction: row;
   }
 
   &__main-panel {
@@ -22,9 +22,12 @@
 
   &__sub-panel {
     display: flex;
-    justify-content: flex-end;
     background: $primary-muted;
-    width: 40%;
-    height: 100%;
+
+    @include respond-to-mf(tablet-lg) {
+      justify-content: flex-end;
+      width: 40%;
+      height: 100%;
+    }
   }
 }

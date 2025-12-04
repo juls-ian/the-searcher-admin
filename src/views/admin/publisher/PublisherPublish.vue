@@ -11,6 +11,8 @@
   import FileUploader from '@/components/media/FileUploader.vue'
   import RichTextEditor from '@/components/forms/RichTextEditor.vue'
   import articleSchema from '@/composables/articleSchema'
+  import RecentArticles from '@/components/widgets/RecentArticles.vue'
+  import WidgetSkeleton from '@/components/ui/skeleton/WidgetSkeleton.vue'
 
   const articleStore = useArticleStore()
   const articleCategoryStore = useArticleCategoryStore()
@@ -286,7 +288,7 @@
               </div>
 
               <div class="publisher__btn-group form__btn-group">
-                <button type="submit" class="publisher__btn btn btn--preview">
+                <button type="button" class="publisher__btn btn btn--preview">
                   <span> Preview </span>
                 </button>
 
@@ -299,7 +301,17 @@
         </div>
       </div>
 
-      <div class="workspace__sub-panel"></div>
+      <div class="workspace__sub-panel">
+        <Suspense>
+          <template #default>
+            <RecentArticles />
+          </template>
+
+          <template #fallback>
+            <WidgetSkeleton />
+          </template>
+        </Suspense>
+      </div>
     </div>
   </MainLayout>
 </template>
@@ -309,15 +321,14 @@
   @use '@/assets/layouts' as *;
 
   .publisher {
-
     &__btn-group {
       margin-top: spacing(3);
     }
 
     &__same-artist {
-        @include respond-to-mf(tablet-lg) {
-      margin-top: spacing(2);
-    }
+      @include respond-to-mf(tablet-lg) {
+        margin-top: spacing(2);
+      }
     }
 
     &__alert {
