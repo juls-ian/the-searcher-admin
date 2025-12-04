@@ -3,39 +3,32 @@
   import { MoreHorizontalIcon } from '@hugeicons/core-free-icons/index'
   import { HugeiconsIcon } from '@hugeicons/vue'
   import { onMounted } from 'vue'
+  import SkeletonLoader from './SkeletonLoader.vue'
 
   const articleStore = useArticleStore()
   const surfaceDark = '#181818'
 
   onMounted(() => {
-     // Only fetch if articles aren't already loaded
+    // Only fetch if articles aren't already loaded
     if (articleStore.articles.length === 0) {
       articleStore.fetchArticles()
     }
   })
-
 </script>
 
 <template>
   <div class="widget">
     <h4 class="widget__title">Recent Articles</h4>
-    <article
-      class="widget__feed article"
-      v-for="article in articleStore.getRecentArticles(5)"
-      :key="article.id"
-    >
+    <article class="widget__feed article" v-for="n in 5" :key="`skeleton-${n}`">
       <div class="widget__feed-left">
-        <img
-          class="article__thumbnail"
-        />
-        <h6 class="article__title"></h6>
-
+        <SkeletonLoader class="article__title" width="15rem" height="12rem" border-radius="1rem" />
+        <SkeletonLoader class="article__title" width="80%" height="1.5rem"/>
       </div>
 
       <div class="widget__feed-right">
-        <span class="article__category"></span>
-        <span class="article__writer"></span>
-        <span class="article__publish-date"></span>
+        <SkeletonLoader class="article__category" width="60px" height="1rem" />
+        <SkeletonLoader class="article__writer" width="100px" height="1rem" />
+        <SkeletonLoader class="article__publish-date" width="80px" height="1rem" />
         <div class="options">
           <HugeiconsIcon :icon="MoreHorizontalIcon" :size="20" :color="surfaceDark" />
         </div>
@@ -57,7 +50,6 @@
       object-fit: cover;
       flex-shrink: 0;
       border-radius: 1rem;
-      background: $primary-accent;
 
       @include respond-to-mf(tablet-lg) {
         width: 21rem;
@@ -65,18 +57,12 @@
     }
 
     &__category {
-      background: $primary-accent;
-
     }
 
     &__writer {
-      background: $primary-accent;
-
     }
 
     &__publish-date {
-      background: $primary-accent;
-
     }
   }
 </style>

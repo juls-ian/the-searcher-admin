@@ -35,14 +35,15 @@
   @use '@/assets/utils' as *;
 
   .skeleton {
+    margin: spacing(0.5) 0;
     background: linear-gradient(
       90deg,
-      $surface-dark 0%,
-      lighten($surface-dark, 5%) 50%,
-      $surface-dark 100%
+      $primary-muted 0%,
+      lighten($primary-muted, 5%) 50%,
+      $primary-muted 100%
     );
     background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
+    animation: shimmer 1s infinite;
 
     &--circle {
       border-radius: 50%;

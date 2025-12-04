@@ -7,13 +7,10 @@
   const articleStore = useArticleStore()
   const surfaceDark = '#181818'
 
-  onMounted(() => {
-     // Only fetch if articles aren't already loaded
-    if (articleStore.articles.length === 0) {
-      articleStore.fetchArticles()
-    }
-  })
-
+  // Async
+  if (articleStore.articles.length === 0) {
+    await articleStore.fetchArticles()
+  }
 </script>
 
 <template>
@@ -32,7 +29,6 @@
           @error="(e) => console.log('Image failed to load:', article.thumbnail)"
         />
         <h6 class="article__title">{{ article.title }}</h6>
-
       </div>
 
       <div class="widget__feed-right">
@@ -56,7 +52,7 @@
 
     &__thumbnail {
       width: 15rem;
-      height: 12rem;
+      height: auto;
       object-fit: cover;
       flex-shrink: 0;
       border-radius: 1rem;
