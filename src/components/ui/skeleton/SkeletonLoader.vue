@@ -33,13 +33,14 @@
 
 <style lang="scss" scoped>
   @use '@/assets/utils' as *;
+  @use 'sass:color';
 
   .skeleton {
     margin: spacing(0.5) 0;
     background: linear-gradient(
       90deg,
       $primary-muted 0%,
-      lighten($primary-muted, 5%) 50%,
+      color.adjust($primary-muted, $lightness: 5 * 1%) 50%,
       $primary-muted 100%
     );
     background-size: 200% 100%;
