@@ -30,6 +30,7 @@ export const useArticleStore = defineStore('article', () => {
     error.value = null
 
     try {
+      await new Promise(resolve => setTimeout(resolve, 4000))
       const response = await api.get(url, { params })
       articles.value = response.data || [] // assign to state
       paginationLinks.value = response.meta.links || []

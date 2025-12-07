@@ -48,18 +48,14 @@
   @use '@/assets/layouts' as *;
 
   .article {
-    gap: spacing(5);
+    gap: spacing(2);
 
     &__thumbnail {
-      width: 15rem;
-      height: auto;
+      width: 18rem;
+      height: 10rem;
       object-fit: cover;
       flex-shrink: 0;
       border-radius: 1rem;
-
-      @include respond-to-mf(tablet-lg) {
-        width: 21rem;
-      }
     }
 
     &__category {
