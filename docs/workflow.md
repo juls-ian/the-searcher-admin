@@ -69,6 +69,8 @@ Separate two folders for the resources:
 5. create the login page 
    
 
+# Components
+
 ## Core Components 
 
 The app will consist of these components:
@@ -76,6 +78,7 @@ The app will consist of these components:
 1. Navbar 
 2. Toolbar 
 3. Main Layout 
+4. Skeleton Loaders
 
 These three will be component foundation and shall be developed first, Navbar -> Toolbar -> Main Layout
 
@@ -88,7 +91,17 @@ The form which is an essential part of the admin side shall have these component
 3. FileUploader 
 4. MultiFileUploader
 
-####
+## Widgets 
+
+These shall be the widgets:
+
+1. Recent Articles 
+
+### Skeleton Components
+
+These shall be the placeholders whenever data fetching is involved in the ui
+
+1. Skeleton Widget
 
   
 

@@ -13,6 +13,8 @@
   import articleSchema from '@/composables/articleSchema'
   import RecentArticles from '@/components/widgets/RecentArticles.vue'
   import WidgetSkeleton from '@/components/ui/skeleton/WidgetSkeleton.vue'
+  import { VueDatePicker } from '@vuepic/vue-datepicker'
+  import '@vuepic/vue-datepicker/dist/main.css'
 
   const articleStore = useArticleStore()
   const articleCategoryStore = useArticleCategoryStore()
@@ -141,8 +143,15 @@
               <!-- Date picker -->
               <div class="form__field-group">
                 <label class="form__label">Date</label>
-
-                <Field name="date"> </Field>
+                <Field name="date" v-slot="{ field, errors, errorMessage, handleChange }">
+                  <VueDatePicker
+                    class="form__date-picker"
+                    placeholder="Select date"
+                    :dark="false"
+                    :model-value="field.value"
+                    @update:model-value="handleChange"
+                  />
+                </Field>
               </div>
 
               <!-- Body textarea -->
@@ -319,6 +328,8 @@
 <style lang="scss" scoped>
   @use '@/assets/utils' as *;
   @use '@/assets/layouts' as *;
+
+
 
   .publisher {
     &__btn-group {
