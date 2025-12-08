@@ -99,11 +99,19 @@ npm i @tiptap/extension-drag-handle-vue-3 @tiptap/extension-drag-handle @tiptap/
 npm i dayjs
 ```
 ---
+#### Vue Datepicker 
+```bash 
+npm i @vuepic/vue-datepicker
+```
+---
+### V2 Dependencies:
+---
 #### TanStack Query Vue*
 ```bash 
 npm i @tanstack/vue-query
 ```
-### Vue 3 Toastify 
+---
+#### Vue 3 Toastify 
 ```bash 
 npm i vue3-toastify
 ```

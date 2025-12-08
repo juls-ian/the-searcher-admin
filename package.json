@@ -26,6 +26,7 @@
     "@tiptap/starter-kit": "^3.4.4",
     "@tiptap/vue-3": "^3.4.4",
     "@tiptap/y-tiptap": "^3.0.1",
+    "@vuepic/vue-datepicker": "^12.1.0",
     "@vueuse/core": "^13.9.0",
     "axios": "^1.12.2",
     "dayjs": "^1.11.18",
