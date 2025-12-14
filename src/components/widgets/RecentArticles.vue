@@ -3,14 +3,16 @@
   import { MoreHorizontalIcon } from '@hugeicons/core-free-icons/index'
   import { HugeiconsIcon } from '@hugeicons/vue'
   import { onMounted } from 'vue'
+  import OptionsMenu from '@/components/ui/OptionsMenu.vue'
 
   const articleStore = useArticleStore()
-  const surfaceDark = '#181818'
 
   // Async
   if (articleStore.articles.length === 0) {
     await articleStore.fetchArticles()
   }
+
+
 </script>
 
 <template>
@@ -36,7 +38,7 @@
         <span class="article__writer">{{ article.writer }}</span>
         <span class="article__publish-date">{{ article.published_at }}</span>
         <div class="options">
-          <HugeiconsIcon :icon="MoreHorizontalIcon" :size="20" :color="surfaceDark" />
+          <OptionsMenu @edit="" @delete="" />
         </div>
       </div>
     </article>
