@@ -110,9 +110,7 @@ onUnmounted(() => {
   background: $surface-light;
   padding: spacing(2) spacing(3);
   background: $surface-light;
-  box-shadow:
-    rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
-    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  @include box-shadow-bg;
 
   @include respond-to-mf(tablet-lg) {
     width: 80%;
