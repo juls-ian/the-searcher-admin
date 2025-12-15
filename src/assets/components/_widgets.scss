@@ -5,19 +5,23 @@
   height: auto;
   display: flex;
   flex-direction: column;
-  padding: 0 2rem;
-  gap: spacing(3);
+  padding: 0 0;
+  // gap: spacing(3);
   background: $surface-light;
   display: none;
 
   @include respond-to-mf(tablet-lg) {
+    padding: spacing(3) spacing(2);
     display: block;
+  }
+
+  @include respond-to-mf(desktop-sm) {
+    padding: spacing(3) spacing(4);
   }
 
   &__title {
     text-align: start;
     color: $text-dark-main;
-    margin-top: spacing(3);
     font-weight: 500;
   }
 

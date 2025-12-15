@@ -1,3 +1,7 @@
+# Unused codes in the SkeletonLoader component
+
+## initial version 
+```vue 
 <script setup>
   defineProps({
     width: {
@@ -15,10 +19,6 @@
     circle: {
       type: Boolean,
       default: false
-    },
-    responsiveClass: {
-      type: String,
-      default: ''
     }
   })
 </script>
@@ -26,7 +26,7 @@
 <template>
   <div
     class="skeleton"
-    :class="{ 'skeleton--circle': circle }, responsiveClass"
+    :class="{ 'skeleton--circle': circle }"
     :style="{
       width: width,
       height: height,
@@ -65,3 +65,4 @@
     }
   }
 </style>
+```
