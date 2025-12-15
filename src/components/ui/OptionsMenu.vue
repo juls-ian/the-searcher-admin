@@ -38,10 +38,10 @@
     </button>
 
     <div class="options-menu__dropdown" v-if="isOpen">
-      <button class="options-menu__btn" @click="handleEdit">
+      <button class="options-menu__btn btn btn--options" @click="handleEdit">
         <HugeiconsIcon :icon="PencilEdit02Icon" :size="15" :color="surfaceDark" /> Edit
       </button>
-      <button class="options-menu__btn" @click="handleDelete">
+      <button class="options-menu__btn btn btn--options" @click="handleDelete">
         <HugeiconsIcon :icon="Delete02Icon" :size="15" :color="surfaceDark" /> Delete
       </button>
     </div>
@@ -66,8 +66,6 @@
       @include respond-to-df(desktop-md) {
         padding: spacing(1) spacing(1.5);
       }
-
-
     }
 
     &__trigger {
@@ -77,12 +75,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: spacing(1);
-
-      ga
+      gap: spacing(2);
 
       &:nth-child(1) {
-        margin-bottom: spacing(1.5);
+        margin-bottom: spacing(1);
       }
     }
   }
