@@ -15,6 +15,7 @@
   import WidgetSkeleton from '@/components/ui/skeleton/WidgetSkeleton.vue'
   import { VueDatePicker } from '@vuepic/vue-datepicker'
   import '@vuepic/vue-datepicker/dist/main.css'
+  import router from '@/router'
 
   const articleStore = useArticleStore()
   const articleCategoryStore = useArticleCategoryStore()
@@ -28,6 +29,8 @@
     articleStore.fetchArticles()
     articleCategoryStore.fetchArticleCategories()
     userStore.fetchUsers()
+    userStore.fetchCurrentUser()
+    userStore.currentUser
   })
 
   // Safety check
@@ -39,11 +42,78 @@
     }
   })
 
-  const handleSubmit = (values) => {
-    console.log('Form values:', values)
+  const handleSubmit = async (formValues) => {
+    try {
+      const formData = new FormData()
+
+      formData.append('title', formValues.title)
+      formData.append('body', formValues.body)
+      formData.append('article_category_id', formValues.category)
+      formData.append('writer_id', formValues.writer)
+
+      // Publication date
+      if (formValues.date) {
+        formData.append('published_at', new Date(formValues.date).toISOString())
+      }
+
+      // Add to ticker & live (bracket notation)
+      const addToTicker = formValues['add-to-ticker'] ? 1 : 0
+      const isLive = formValues['is-live'] ? 1 : 0
+      formData.append('add_to_ticker', addToTicker)
+      formData.append('is_live', isLive)
+
+      // Ticker expires at
+      if (addToTicker && formValues.date) {
+        // Adjust this logic based on your requirements
+        formData.append('ticker_expires_at', new Date(formValues.date).toISOString())
+      }
+
+      // Cover photo block - always required
+      if (formValues.cover) {
+        formData.append('cover_photo', formValues.cover)
+      }
+
+      if (formValues['cover-artist']) {
+        formData.append('cover_artist_id', formValues['cover-artist'])
+      }
+      formData.append('cover_caption', formValues.caption || '')
+
+      // Thumbnail & thumbnail artist
+      if (sameArtist.value) {
+        formData.append('cover_photo', formValues.cover)
+
+        // Send flag to backend
+        formData.append('thumbnail_same_as_cover', '1')
+
+        if (formValues['cover-artist']) {
+          formData.append('cover_artist_id', formValues['cover-artist'])
+        }
+        // Use cover as thumbnail
+        if (formValues.cover) {
+          formData.append('thumbnail', formValues.cover)
+        }
+
+      } else {
+        // Send separate thumbnail
+        formData.append('thumbnail_same_as_cover', '0')
+
+        if (formValues.thumbnail) {
+          formData.append('thumbnail', formValues.thumbnail)
+        }
+
+        if (formValues['thumbnail-artist']) {
+          formData.append('thumbnail_artist_id', formValues['thumbnail-artist'])
+        }
+      }
+
+      // Submit to store
+      await articleStore.addArticle(formData)
+      router.push({ name: 'publisher-publish' })
+    } catch (error) {
+      console.error('Failed to publish article')
+    }
   }
 
-  console.log('positions:', userStore.getStaffByPositionCategory)
 </script>
 
 <template>
@@ -76,8 +146,9 @@
               </div>
 
               <!-- Add to ticker checkbox -->
-              <div class="form__field-group">
+              <div class="form__field-group form__field-group--row">
                 <!-- onChange for regular inputs (dropdown, rte, etc) -->
+                 <!-- Add to ticker -->
                 <Field
                   name="add-to-ticker"
                   v-slot="{ field, value, errors }"
@@ -91,6 +162,27 @@
                     @update:model-value="field.onChange"
                     class="form__checkbox"
                     label="Add to ticker"
+                  />
+
+                  <div class="form__input-alert form__input-alert--rel" v-if="errors.length !== 0">
+                    <p>{{ errorMessage || '&nbsp;' }}</p>
+                  </div>
+                </Field>
+
+                <!-- Live -->
+                <Field
+                  name="is-live"
+                  v-slot="{ field, value, errors }"
+                  type="checkbox"
+                  :value="true"
+                  :unchecked-value="false"
+                  class="form__checkbox"
+                >
+                  <Checkbox
+                    :model-value="value"
+                    @update:model-value="field.onChange"
+                    class="form__checkbox"
+                    label="Live"
                   />
 
                   <div class="form__input-alert form__input-alert--rel" v-if="errors.length !== 0">
@@ -150,7 +242,11 @@
                     :dark="false"
                     :model-value="field.value"
                     @update:model-value="handleChange"
+                    @blur="field.onBlur"
                   />
+                  <div class="form__input-alert form__input-alert--rel" v-if="errors.length !== 0">
+                    <p>{{ errorMessage || '&nbsp;' }}</p>
+                  </div>
                 </Field>
               </div>
 
@@ -328,8 +424,6 @@
 <style lang="scss" scoped>
   @use '@/assets/utils' as *;
   @use '@/assets/layouts' as *;
-
-
 
   .publisher {
     &__btn-group {

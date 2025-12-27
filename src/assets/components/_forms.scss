@@ -25,6 +25,11 @@
     flex-direction: column;
     position: relative;
     align-items: start;
+
+    &--row {
+      flex-direction: row;
+      gap: spacing(4);
+    }
   }
 
   &__file-group {
