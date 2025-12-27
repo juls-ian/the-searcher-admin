@@ -1,6 +1,7 @@
 import api from '@/services/api'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
+import { useAuthStore } from './auth'
 
 export const useUserStore = defineStore('user', () => {
   // States
@@ -38,19 +39,19 @@ export const useUserStore = defineStore('user', () => {
   const getActiveStaff = computed(() =>
     [...users.value] // spread operator, shallow copy of reactive array
       .filter((user) => user.status === 'active')
-      .sort((a, b) => a.full_name.toLowerCase().localeCompare(b.full_name.toLowerCase())),
+      .sort((a, b) => a.full_name.toLowerCase().localeCompare(b.full_name.toLowerCase()))
   )
 
   const getInactiveStaff = computed(() =>
     [...users.value]
       .filter((user) => user.status === 'inactive')
-      .sort((a, b) => a.full_name.toLowerCase().localeCompare(b.full_name.toLowerCase())),
+      .sort((a, b) => a.full_name.toLowerCase().localeCompare(b.full_name.toLowerCase()))
   )
 
   const getAlumni = computed(() =>
     [...users.value]
       .filter((user) => user.status === 'alumni')
-      .sort((a, b) => a.full_name.toLowerCase().localeCompare(b.full_name.toLowerCase())),
+      .sort((a, b) => a.full_name.toLowerCase().localeCompare(b.full_name.toLowerCase()))
   )
 
   const getWriters = computed(() => {
@@ -105,10 +106,24 @@ export const useUserStore = defineStore('user', () => {
     error.value = null
 
     try {
-      const response = await api('/users')
+      const response = await api.get('/users')
       users.value = response.data
     } catch (err) {
       error.value = err.response?.data?.message || 'Cannot retrieve users'
+      throw err
+    }
+  }
+
+  async function fetchCurrentUser() {
+    error.value = null
+
+    try {
+      // const response = await api.get('/users/')
+      const authStore = useAuthStore()
+      const user = authStore.user
+      currentUser.value = user.id
+    } catch (err) {
+      error.value = err.response?.data?.message || 'Cannot retrieve user'
       throw err
     }
   }
@@ -129,5 +144,6 @@ export const useUserStore = defineStore('user', () => {
     getUserPositionName,
     // Actions
     fetchUsers,
+    fetchCurrentUser
   }
 })
