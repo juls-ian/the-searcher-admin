@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import api from '@/services/api'
+import { useUserStore } from './user'
 
 export const useArticleStore = defineStore('article', () => {
   // States
@@ -30,13 +31,33 @@ export const useArticleStore = defineStore('article', () => {
     error.value = null
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 4000))
+      await new Promise((resolve) => setTimeout(resolve, 4000))
       const response = await api.get(url, { params })
       articles.value = response.data || [] // assign to state
       paginationLinks.value = response.meta.links || []
       paginationMeta.value = response.meta || {}
     } catch (err) {
       error.value = err.response?.data?.message || 'Cannot retrieve articles'
+      throw err
+    }
+  }
+
+  async function addArticle(formData) {
+    error.value = null
+
+    try {
+      const userStore = useUserStore()
+      const user = userStore.fetchCurrentUser
+      formData.append('publisher_id', user.id)
+
+      const response = await api.post('/articles', formData)
+
+      // Pushing article from response
+      articles.value.unshift(response.data)
+      return response.data
+    } catch (err) {
+      error.value = err.response?.data?.message || 'Cannot publish article'
+      console.error(err)
       throw err
     }
   }
@@ -52,6 +73,7 @@ export const useArticleStore = defineStore('article', () => {
     getRecentArticles,
     getSortedArticles,
     // Actions
-    fetchArticles
+    fetchArticles,
+    addArticle
   }
 })

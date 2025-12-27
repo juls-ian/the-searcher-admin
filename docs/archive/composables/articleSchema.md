@@ -1,9 +1,12 @@
+# Unused codes in articleSchema 
+
+## 1.0: initial 
+```javascript 
 import * as yup from 'yup'
 
 const articleSchema = yup.object({
   title: yup.string().required('Title is required'),
   'add-to-ticker': yup.boolean().optional(),
-  'is-live': yup.boolean().optional(),
   category: yup.number().required('Category is required'),
   writer: yup.number().required('Writer is required'),
   date: yup.date().optional(),
@@ -16,17 +19,12 @@ const articleSchema = yup.object({
     })
     .test('fileType', 'Cover photo must be a valid image file', (value) => {
       return !value || (value && value.type.startsWith('image/'))
-      // return !value ? true : value.type.startsWith('image/')
     }),
   'cover-artist': yup.number().required('Cover artist is required'),
   caption: yup.string().required('Caption is required'),
-  'same-artist': yup.boolean().default(false),
   thumbnail: yup.mixed().when('same-artist', {
     is: false,
-    then: (schema) => schema.required('Thumbnail is required')
-    .test('fileSize', 'Thumbnail must be a valid image file', (value) => {
-      return !value || (value && value.type.startsWith('image/'))
-    }),
+    then: (schema) => schema.required('Thumbnail is required'),
     otherwise: (schema) => schema.nullable() // else null
   }),
   'thumbnail-artist': yup.number().when('same-artist', {
@@ -37,3 +35,5 @@ const articleSchema = yup.object({
 })
 
 export default articleSchema
+
+```

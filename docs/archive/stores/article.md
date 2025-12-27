@@ -73,3 +73,25 @@
   return `/storage/${imagePath}`
 }
 ```
+
+## addArticle()
+### 1.0: initial 
+```javascript 
+async function addArticle(formData) {
+  error.value = null
+
+  try {
+    const userStore = useUserStore()
+    const user = userStore.fetchCurrentUser
+    formData.publisher_id = user.id
+
+    const response = await api.post('/articles', formData)
+    articles.value.unshift(formData)
+    return response.data
+  } catch (err) {
+    error.value = err.response?.data?.message || 'Cannot publish article'
+    console.error(err)
+    throw err
+  }
+}
+```
