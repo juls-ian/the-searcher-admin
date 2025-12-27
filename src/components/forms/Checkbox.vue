@@ -67,7 +67,7 @@ const isChecked = computed({
 
     /* Hover state */
     &:hover {
-      background-color: $primary-accent;
+      background: $primary-accent !important;
       transition-duration: 0s;
     }
 
