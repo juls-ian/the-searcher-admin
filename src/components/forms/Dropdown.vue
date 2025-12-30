@@ -1,5 +1,5 @@
 <script setup>
-  import { onMounted, ref } from 'vue'
+  import { nextTick, onMounted, ref } from 'vue'
   import { useArticleCategoryStore } from '@/stores/articleCategory'
 
   /**
@@ -73,6 +73,21 @@
   const toggleSubmenu = (parentId, event) => {
     event.stopPropagation() // prevent closing main dropdown
     openSubmenuId.value = openSubmenuId.value === parentId ? null : parentId // open and closing submenu and updates the ref
+
+    // Positioning logic
+    if (openSubmenuId.value === parentId) {
+      nextTick(() => {
+        const parentItem = event.currentTarget
+        const submenu = parentItem.querySelector('.dropdown__submenu')
+
+        if (submenu) {
+          const parentRect = parentItem.getBoundingClientRect()
+          // Submenu position to the right of parent item
+          submenu.style.left = `${parentRect.right + 4}px`
+          submenu.style.top = `${parentRect.top}px`
+        }
+      })
+    }
   }
 
   // For single select with checkbox
@@ -120,7 +135,7 @@
       openSubmenuId.value = null
     }
     // Emit blur when dropdown closes
-    // emit('blur')
+    emit('blur')
   }
 </script>
 
@@ -286,6 +301,7 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       z-index: 1000;
       overflow-y: auto;
+      overflow-x: visible;
       // overflow-x: hidden;
 
       &-item {
@@ -324,6 +340,7 @@
           content: '›';
           font-size: 18px;
           color: $text-dark-main;
+          margin-left: auto;
           // margin-left: spacing(5);
         }
       }
@@ -332,11 +349,12 @@
     &__submenu {
       display: none;
       width: 10%;
-      position: absolute;
+      // position: absolute;
+      position: fixed;
       list-style-type: none;
-      top: 0;
-      left: spacing(20);
-      margin-top: spacing(6);
+      margin: 0;
+      padding: 0;
+      // left: spacing(20);
       padding: 0;
       // background: darken($surface-light, 3%);
       background: color.adjust($surface-light, $lightness: -3%);
