@@ -22,6 +22,8 @@
   const userStore = useUserStore()
 
   const sameArtist = ref(false)
+  const isLive = ref(false)
+  const isHeader = ref(false)
   // Accessing form methods
   const { setFieldValue } = useForm()
 
@@ -31,6 +33,7 @@
     userStore.fetchUsers()
     userStore.fetchCurrentUser()
     userStore.currentUser
+    articleStore.articles
   })
 
   // Safety check
@@ -92,7 +95,6 @@
         if (formValues.cover) {
           formData.append('thumbnail', formValues.cover)
         }
-
       } else {
         // Send separate thumbnail
         formData.append('thumbnail_same_as_cover', '0')
@@ -114,6 +116,7 @@
     }
   }
 
+  console.log('header articles: ', articleStore.getHeaderArticles)
 </script>
 
 <template>
@@ -127,8 +130,8 @@
             :validation-schema="articleSchema"
           >
             <div class="publisher__row form__row">
+              <!-- Title field  -->
               <div class="form__field-group">
-                <!-- Title field  -->
                 <label class="form__label" for="title">Title</label>
                 <Field name="title" v-slot="{ field, errors, errorMessage }">
                   <input
@@ -144,11 +147,14 @@
                   </div>
                 </Field>
               </div>
+            </div>
 
+            <!-- Checkboxes -->
+            <div class="publisher__row form__row">
               <!-- Add to ticker checkbox -->
               <div class="form__field-group form__field-group--row">
                 <!-- onChange for regular inputs (dropdown, rte, etc) -->
-                 <!-- Add to ticker -->
+                <!-- Add to ticker -->
                 <Field
                   name="add-to-ticker"
                   v-slot="{ field, value, errors }"
@@ -172,11 +178,11 @@
                 <!-- Live -->
                 <Field
                   name="is-live"
-                  v-slot="{ field, value, errors }"
+                  v-model="isLive"
                   type="checkbox"
                   :value="true"
                   :unchecked-value="false"
-                  class="form__checkbox"
+                  v-slot="{ field }"
                 >
                   <Checkbox
                     :model-value="value"
@@ -184,14 +190,31 @@
                     class="form__checkbox"
                     label="Live"
                   />
+                </Field>
 
-                  <div class="form__input-alert form__input-alert--rel" v-if="errors.length !== 0">
-                    <p>{{ errorMessage || '&nbsp;' }}</p>
-                  </div>
+                <!-- Header -->
+                <Field
+                  v-if="isLive"
+                  name="is-header"
+                  v-model="isHeader"
+                  type="checkbox"
+                  :value="true"
+                  :unchecked-value="false"
+                  v-slot="{ field }"
+                >
+                  <Checkbox
+                    :model-value="value"
+                    @update:model-value="field.onChange"
+                    class="form__checkbox"
+                    label="Mark as header"
+                  />
                 </Field>
               </div>
+            </div>
 
-              <!-- Article Category dropdown  -->
+            <!-- Dropdowns -->
+            <div class="publisher__row form__row">
+              <!-- Article Category -->
               <div class="form__field-group">
                 <label class="form__label">Category</label>
                 <Field name="category" v-slot="{ field, errors, errorMessage }">
@@ -231,7 +254,30 @@
                   </div>
                 </Field>
               </div>
+            </div>
 
+            <div class="publisher__row form__row" v-if="isLive && !isHeader">
+              <!-- Series of (live articles)   -->
+              <div class="form__field-group">
+                <label class="form__label">Series of</label>
+                <Field name="series" v-slot="{ field, errors, errorMessage }">
+                  <Dropdown
+                    :model-value="field.value"
+                    @update:model-value="field.onChange"
+                    @blur="field.onBlur"
+                    :data="articleStore.getHeaderArticles"
+                    label-name="title"
+                    value-key="id"
+                    placeholder="Select series"
+                  />
+                  <div class="form__input-alert form__input-alert--rel" v-if="errors.length !== 0">
+                    <p>{{ errorMessage || '&nbsp;' }}</p>
+                  </div>
+                </Field>
+              </div>
+            </div>
+
+            <div class="publisher__row form__row">
               <!-- Date picker -->
               <div class="form__field-group">
                 <label class="form__label">Date</label>
@@ -249,7 +295,9 @@
                   </div>
                 </Field>
               </div>
+            </div>
 
+            <div class="publisher__row form__row">
               <!-- Body textarea -->
               <div class="form__field-group">
                 <label class="form__label" for="tiptapEditor">Body</label>
@@ -261,10 +309,11 @@
                   </div>
                 </Field>
               </div>
+            </div>
 
-              <!-- Cover block -->
+            <div class="publisher__row form__row">
+              <!-- Cover Photo -->
               <div class="form__file-group">
-                <!-- Cover Photo -->
                 <div class="form__field-group">
                   <label class="form__label">Cover</label>
                   <!-- handleChange for file inputs -->
@@ -324,7 +373,9 @@
                   </div>
                 </div>
               </div>
+            </div>
 
+            <div class="publisher__row form__row">
               <!-- Thumbnail block -->
               <div class="form__file-group">
                 <!-- Thumbnail Photo -->
@@ -391,16 +442,16 @@
                   </div>
                 </div>
               </div>
+            </div>
 
-              <div class="publisher__btn-group form__btn-group">
-                <button type="button" class="publisher__btn btn btn--preview">
-                  <span> Preview </span>
-                </button>
+            <div class="publisher__btn-group form__btn-group">
+              <button type="button" class="publisher__btn btn btn--preview">
+                <span> Preview </span>
+              </button>
 
-                <button type="submit" class="publisher__btn btn btn--primary">
-                  <span> Publish </span>
-                </button>
-              </div>
+              <button type="submit" class="publisher__btn btn btn--primary">
+                <span> Publish </span>
+              </button>
             </div>
           </Form>
         </div>

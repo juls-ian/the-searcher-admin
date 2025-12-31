@@ -11,8 +11,14 @@
     flex-direction: column;
     gap: spacing(2);
 
+    @include respond-to-mf(desktop-sm) {
+      flex-direction: row;
+      gap: spacing(1);
+    }
+
     // Inline modifier
     &--inline {
+      display: flex;
       flex-direction: row;
       align-items: center;
       gap: spacing(1);

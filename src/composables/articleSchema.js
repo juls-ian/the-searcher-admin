@@ -3,9 +3,14 @@ import * as yup from 'yup'
 const articleSchema = yup.object({
   title: yup.string().required('Title is required'),
   'add-to-ticker': yup.boolean().optional(),
-  'is-live': yup.boolean().optional(),
+  'is-live': yup.boolean().optional().default(false),
+  'is-header': yup.boolean().optional().default(false),
   category: yup.number().required('Category is required'),
   writer: yup.number().required('Writer is required'),
+  series: yup.number().when(['is-live', 'is-header'], {
+    is: (isLive, isHeader) => isLive === true && !isHeader ,
+    then: (schema) => schema.required('Series is required')
+  }),
   date: yup.date().optional(),
   body: yup.string().required('Body is required'),
   cover: yup
@@ -23,10 +28,12 @@ const articleSchema = yup.object({
   'same-artist': yup.boolean().default(false),
   thumbnail: yup.mixed().when('same-artist', {
     is: false,
-    then: (schema) => schema.required('Thumbnail is required')
-    .test('fileSize', 'Thumbnail must be a valid image file', (value) => {
-      return !value || (value && value.type.startsWith('image/'))
-    }),
+    then: (schema) =>
+      schema
+        .required('Thumbnail is required')
+        .test('fileSize', 'Thumbnail must be a valid image file', (value) => {
+          return !value || (value && value.type.startsWith('image/'))
+        }),
     otherwise: (schema) => schema.nullable() // else null
   }),
   'thumbnail-artist': yup.number().when('same-artist', {

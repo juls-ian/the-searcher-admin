@@ -17,6 +17,10 @@ export const useArticleStore = defineStore('article', () => {
     [...articles.value].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
   )
 
+  const getHeaderArticles = computed(() => {
+    return articles.value.filter((article) => article.is_header === true)
+  })
+
   /**
    * Normal function - already reactive because it came from a ref
    * Formerly a computed property
@@ -72,6 +76,7 @@ export const useArticleStore = defineStore('article', () => {
     // Getters
     getRecentArticles,
     getSortedArticles,
+    getHeaderArticles,
     // Actions
     fetchArticles,
     addArticle
