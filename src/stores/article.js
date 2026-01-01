@@ -11,6 +11,7 @@ export const useArticleStore = defineStore('article', () => {
   const articles = ref([])
   const paginationLinks = ref([])
   const paginationMeta = ref([])
+  const now = new Date().toISOString()
 
   // Getters
   const getSortedArticles = computed(() =>
@@ -18,7 +19,7 @@ export const useArticleStore = defineStore('article', () => {
   )
 
   const getHeaderArticles = computed(() => {
-    return articles.value.filter((article) => article.is_header === true)
+    return articles.value.filter((article) => article.is_header === true && article.live_expires_at > now)
   })
 
   /**
@@ -40,6 +41,7 @@ export const useArticleStore = defineStore('article', () => {
       articles.value = response.data || [] // assign to state
       paginationLinks.value = response.meta.links || []
       paginationMeta.value = response.meta || {}
+
     } catch (err) {
       error.value = err.response?.data?.message || 'Cannot retrieve articles'
       throw err

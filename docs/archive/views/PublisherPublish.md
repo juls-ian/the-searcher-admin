@@ -235,7 +235,7 @@ const getSubcategoriesFor = (parentId) => {
 
 ## same artist checkbox 
 ### initial version
-```html 
+```vue 
 <div class="publisher__field-group form__field-group">
   <Checkbox
     v-model="sameArtist"
@@ -243,6 +243,29 @@ const getSubcategoriesFor = (parentId) => {
     label="Same as cover artist"
   />
 </div>
+```
+### controlled component pattern (manual sync)
+```vue
+<Field
+  name="same-artist"
+  v-model="sameArtist"
+  type="checkbox"
+  :value="true"
+  :unchecked-value="false"
+  v-slot="{ field }"
+>
+  <Checkbox
+    :model-value="field.value"
+    @update:model-value="
+      (val) => {
+        field.onChange(val)
+        sameArtist = val
+      }
+                        "
+    class="form__checkbox publisher__same-artist"
+    label="Same as cover artist"
+  />
+</Field>
 ```
 
 ## updateEditor

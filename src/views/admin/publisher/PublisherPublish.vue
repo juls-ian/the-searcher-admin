@@ -1,6 +1,6 @@
 <script setup>
   import MainLayout from '@/layouts/MainLayout.vue'
-  import { Form, Field, useForm } from 'vee-validate'
+  import { Form, Field, useForm, useField } from 'vee-validate'
   import { onMounted, ref, watch } from 'vue'
   import { useArticleStore } from '@/stores/article'
   import { useArticleCategoryStore } from '@/stores/articleCategory'
@@ -16,14 +16,18 @@
   import { VueDatePicker } from '@vuepic/vue-datepicker'
   import '@vuepic/vue-datepicker/dist/main.css'
   import router from '@/router'
+  import { useAuthStore } from '@/stores/auth'
+  import Preloader from '@/components/ui/Preloader.vue'
 
   const articleStore = useArticleStore()
   const articleCategoryStore = useArticleCategoryStore()
   const userStore = useUserStore()
+  const authStore = useAuthStore()
 
-  const sameArtist = ref(false)
-  const isLive = ref(false)
-  const isHeader = ref(false)
+  const { value: sameArtist } = useField('same-artist')
+  const { value: isLive } = useField('is-live')
+  const { value: isHeader } = useField('is-header')
+
   // Accessing form methods
   const { setFieldValue } = useForm()
 
@@ -33,6 +37,7 @@
     userStore.fetchUsers()
     userStore.fetchCurrentUser()
     userStore.currentUser
+    articleStore.getHeaderArticles
     articleStore.articles
   })
 
@@ -45,7 +50,15 @@
     }
   })
 
+  watch(isLive, (newValue) => {
+    if (newValue === true) {
+      setFieldValue('series', false)
+      setFieldValue('is-header', null)
+    }
+  })
+
   const handleSubmit = async (formValues) => {
+    authStore.loading = true
     try {
       const formData = new FormData()
 
@@ -59,16 +72,27 @@
         formData.append('published_at', new Date(formValues.date).toISOString())
       }
 
-      // Add to ticker & live (bracket notation)
+      // Add to ticker (bracket notation)
       const addToTicker = formValues['add-to-ticker'] ? 1 : 0
+
+      // Live articles
       const isLive = formValues['is-live'] ? 1 : 0
+      const isHeader = formValues['is-header'] ? 1 : 0
       formData.append('add_to_ticker', addToTicker)
       formData.append('is_live', isLive)
 
+      if (isLive) {
+        formData.append('is_header', formValues['is-header'] ? 1 : 0)
+      }
+
       // Ticker expires at
       if (addToTicker && formValues.date) {
-        // Adjust this logic based on your requirements
         formData.append('ticker_expires_at', new Date(formValues.date).toISOString())
+      }
+
+      // Series
+      if (isLive && !isHeader && formValues.series) {
+        formData.append('series_id', formValues.series)
       }
 
       // Cover photo block - always required
@@ -113,14 +137,15 @@
       router.push({ name: 'publisher-publish' })
     } catch (error) {
       console.error('Failed to publish article')
+    } finally {
+      authStore.loading = false
     }
   }
-
-  console.log('header articles: ', articleStore.getHeaderArticles)
 </script>
 
 <template>
   <MainLayout>
+    <Preloader v-if="authStore.loading" />
     <div class="workspace">
       <div class="workspace__main-panel">
         <div class="publisher">
@@ -157,14 +182,14 @@
                 <!-- Add to ticker -->
                 <Field
                   name="add-to-ticker"
-                  v-slot="{ field, value, errors }"
+                  v-slot="{ field, errors }"
                   type="checkbox"
                   :value="true"
                   :unchecked-value="false"
                   class="form__checkbox"
                 >
                   <Checkbox
-                    :model-value="value"
+                    :model-value="field.value"
                     @update:model-value="field.onChange"
                     class="form__checkbox"
                     label="Add to ticker"
@@ -179,13 +204,13 @@
                 <Field
                   name="is-live"
                   v-model="isLive"
+                  v-slot="{ field }"
                   type="checkbox"
                   :value="true"
                   :unchecked-value="false"
-                  v-slot="{ field }"
                 >
                   <Checkbox
-                    :model-value="value"
+                    :model-value="field.value"
                     @update:model-value="field.onChange"
                     class="form__checkbox"
                     label="Live"
@@ -196,14 +221,14 @@
                 <Field
                   v-if="isLive"
                   name="is-header"
+                  v-slot="{ field }"
                   v-model="isHeader"
                   type="checkbox"
                   :value="true"
                   :unchecked-value="false"
-                  v-slot="{ field }"
                 >
                   <Checkbox
-                    :model-value="value"
+                    :model-value="field.value"
                     @update:model-value="field.onChange"
                     class="form__checkbox"
                     label="Mark as header"
@@ -429,12 +454,7 @@
                     >
                       <Checkbox
                         :model-value="field.value"
-                        @update:model-value="
-                          (val) => {
-                            field.onChange(val)
-                            sameArtist = val
-                          }
-                        "
+                        @update:model-value="field.onChange"
                         class="form__checkbox publisher__same-artist"
                         label="Same as cover artist"
                       />
