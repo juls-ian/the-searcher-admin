@@ -5,6 +5,7 @@
   import { useArticleStore } from '@/stores/article'
   import { useArticleCategoryStore } from '@/stores/articleCategory'
   import { useUserStore } from '@/stores/user'
+  import dayjs from 'dayjs'
 
   import Dropdown from '@/components/forms/Dropdown.vue'
   import Checkbox from '@/components/forms/Checkbox.vue'
@@ -69,7 +70,7 @@
 
       // Publication date
       if (formValues.date) {
-        formData.append('published_at', new Date(formValues.date).toISOString())
+        formData.append('published_at', dayjs(formValues.date).format('YYYY-MM-DD HH:mm:ss'))
       }
 
       // Add to ticker (bracket notation)
