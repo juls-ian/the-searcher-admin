@@ -82,9 +82,36 @@
 
         if (submenu) {
           const parentRect = parentItem.getBoundingClientRect()
+          const submenuWidth = submenu.offsetWidth
+          const viewportWidth = window.innerWidth
+
           // Submenu position to the right of parent item
           submenu.style.left = `${parentRect.right + 4}px`
           submenu.style.top = `${parentRect.top}px`
+
+          // Checker if submenu would overflow right
+          const wouldOverflow = parentRect.right + submenuWidth > viewportWidth
+
+          // Position based on available space
+          if (wouldOverflow) {
+            // Smaller screens
+            if(window.innerWidth < 768)  {
+              // mobile: submenu is below parent item
+              submenu.style.left =`${parentRect.left}px`
+              submenu.style.top = `${parentRect.bottom}px`
+              submenu.style.width = `${parentRect.width}px`
+            } else {
+              // tablet: submenu at inside right
+              submenu.style.left = `${parentRect.right  - 180}px`
+              submenu.style.top =`${parentRect.top}px`
+            }
+          } else {
+            // Enough space on right: normal position
+            submenu.style.left = `${parentRect.right + 4}px`
+            submenu.style.top = `${parentRect.top}px`
+          }
+
+
         }
       })
     }
