@@ -95,23 +95,21 @@
           // Position based on available space
           if (wouldOverflow) {
             // Smaller screens
-            if(window.innerWidth < 768)  {
+            if (window.innerWidth < 768) {
               // mobile: submenu is below parent item
-              submenu.style.left =`${parentRect.left}px`
+              submenu.style.left = `${parentRect.left}px`
               submenu.style.top = `${parentRect.bottom}px`
               submenu.style.width = `${parentRect.width}px`
             } else {
               // tablet: submenu at inside right
-              submenu.style.left = `${parentRect.right  - 180}px`
-              submenu.style.top =`${parentRect.top}px`
+              submenu.style.left = `${parentRect.right - 180}px`
+              submenu.style.top = `${parentRect.top}px`
             }
           } else {
             // Enough space on right: normal position
             submenu.style.left = `${parentRect.right + 4}px`
             submenu.style.top = `${parentRect.top}px`
           }
-
-
         }
       })
     }
@@ -171,7 +169,12 @@
   <div v-if="isDropdownOpen" class="dropdown-overlay" @click="closeDropdown"></div>
   <!-- Actual dropdown -->
   <div class="dropdown">
-    <button type="button" class="dropdown__button" @click="toggleDropdown">
+    <button
+      type="button"
+      class="dropdown__button"
+      :class="{ 'is-dropdown-open': isDropdownOpen }"
+      @click="toggleDropdown"
+    >
       <span class="dropdown__button-label" :class="{ placeholder: !selectedItem }">
         {{ selectedItem || props.placeholder }}
       </span>
@@ -193,7 +196,7 @@
           <ul
             v-if="getChildren(parent[props.valueKey]).length"
             class="dropdown__submenu"
-            :class="{ 'is-open': openSubmenuId === parent[props.valueKey] }"
+            :class="{ 'is-submenu-open': openSubmenuId === parent[props.valueKey] }"
           >
             <li
               v-for="child in getChildren(parent[props.valueKey])"
@@ -307,6 +310,10 @@
         color: $text-dark-main;
       }
 
+      &.is-dropdown-open::after {
+        transform: rotate(180deg);
+      }
+
       .placeholder {
         color: #999;
       }
@@ -393,7 +400,7 @@
       overflow-y: auto;
       z-index: 99;
 
-      &.is-open {
+      &.is-submenu-open {
         display: block;
       }
 
